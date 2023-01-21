@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, Typography, Divider, Stack, Card, Box } from '@mui/material';
-import { Chip, Stack, Typography } from '@mui/material';
+import { Chip } from '@mui/material';
 
 const TargetNode = ({ id, target, prefix }) => {
   const item = Array.isArray(target) ? target.pop() : target;
