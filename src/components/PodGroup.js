@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Box, Typography, Stack } from '@mui/material';
-import { SubscriptionList, CastCard, CategoryList } from '.';
+import { CastCard } from '.';
 
 const PodGroup = ({ name, group, send }) => {
   return (
@@ -40,28 +40,4 @@ const PodGroup = ({ name, group, send }) => {
   );
 };
 
-const HomeScreen = (props) => {
-  const { send, subscriptions, pods } = props;
-
-  const groups = pods?.reduce((out, pod) => {
-    const genre = pod.primaryGenreName;
-    out[genre] = (out[genre] || []).concat(pod);
-    return out;
-  }, {});
-
-  return (
-    <>
-      <Typography sx={{ mt: 3 }} variant="h4">
-        Listen Now
-      </Typography>
-
-      {!!subscriptions && (
-        <SubscriptionList {...props} limit={5} source="home" />
-      )}
-
-      <CategoryList {...props} limited />
-    </>
-  );
-};
-HomeScreen.defaultProps = {};
-export default HomeScreen;
+export default PodGroup;

@@ -202,8 +202,14 @@ const StatePlayer = ({
           />
         )}
 
-        <Stack sx={{ maxWidth: 300 }}>
-          <Typography variant="body1">{title}</Typography>
+        <Stack sx={{ width: 300 }}>
+          <Text scrolling={scrolling}>
+            <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
+              {JSON.stringify(scrolling)} {title}
+            </Typography>
+          </Text>
+
+          {/* <Typography variant="body1">{title}</Typography> */}
         </Stack>
 
         <Stack direction="row">
