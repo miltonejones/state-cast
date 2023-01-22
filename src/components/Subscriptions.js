@@ -46,9 +46,9 @@ export const CastCard = ({ subscription, send, source }) => {
 export const SubscriptionList = ({
   subscriptions,
   send,
-  pods,
   source,
   limit,
+  view,
 }) => {
   const visible = !limit ? subscriptions : subscriptions.slice(0, limit);
   return (
@@ -61,7 +61,19 @@ export const SubscriptionList = ({
           {subscriptions.length} Subscriptions
         </Typography>
 
-        <Button onClick={() => send('BROWSE')}>view all</Button>
+        {view !== 'subs' && (
+          <Button
+            endIcon={<i class="fa-solid fa-arrow-right"></i>}
+            onClick={() =>
+              send({
+                type: 'LINK',
+                view: 'subs',
+              })
+            }
+          >
+            view all
+          </Button>
+        )}
       </Stack>
 
       <Box
@@ -75,29 +87,6 @@ export const SubscriptionList = ({
       >
         {visible.map((subscription) => (
           <CastCard subscription={subscription} send={send} source={source} />
-          // <Card
-          // key={subscription.artworkUrl100}
-          // onClick={() => {
-          //   send({
-          //     type: 'DETAIL',
-          //     podcast: subscription,
-          //     source
-          //   })
-          // }} sx={{width: 200, cursor: 'pointer'}}>
-          //   <CardMedia
-          //     component="img"
-          //     width="200"
-          //     height="200"
-          //     image={subscription.artworkUrl100}
-          //     alt={subscription.trackName}
-          //     />
-          // <CardContent>
-          //   <Typography variant="body2" color="text.secondary">
-          //     {subscription.trackName}
-          //   </Typography>
-          // </CardContent>
-
-          // </Card>
         ))}
       </Box>
     </>

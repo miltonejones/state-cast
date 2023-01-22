@@ -14,7 +14,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-// import { BackButton } from '../../../..';
+import { parseRss, getImageProps } from '../util';
 
 const Layout = styled(Box)(({ theme }) => ({
   margin: theme.spacing(0),
@@ -27,87 +27,24 @@ const Layout = styled(Box)(({ theme }) => ({
 const PodDetail = ({
   detail,
   podcast,
-  source,
+  track: currentTrack,
   subscriptions,
   page = 1,
   send,
 }) => {
-  const recurse = (elements, out = [], level = 0) => {
-    !!elements &&
-      elements.map((element, e) => {
-        const cdata = element.elements?.find((e) => e.type === 'cdata');
-        const text = element.elements?.find((e) => e.type === 'text');
-        if (text) {
-          out.push({
-            [element.name]: text.text,
-            ...element.attributes,
-            level,
-          });
-        } else if (cdata) {
-          out.push({
-            [element.name]: cdata.cdata,
-            ...element.attributes,
-            level,
-          });
-        } else {
-          out.push({
-            ...element.attributes,
-            level,
-          });
-          recurse(element.elements, out, ++level);
-        }
-
-        return out;
-      });
-
-    return out;
-  };
-
-  const getImageProps = (items) => {
-    const isPic = (img) =>
-      ['jpg', 'jpeg', 'png'].some((pic) => !!img && img.indexOf(pic) > 0);
-
-    if (!items) return {};
-
-    const imageMap = items.find((f) => isPic(f.url) || isPic(f.href));
-    if (imageMap) {
-      return {
-        image: isPic(imageMap.url) ? imageMap.url : imageMap.href,
-        ...imageMap,
-      };
-    }
-
-    return {};
-  };
-
-  const elementList = recurse(detail.elements);
-  const listMap = Array.from(new Set(elementList.map((f) => f.level))).reduce(
-    (out, res) => {
-      const items = elementList.filter((f) => f.level === res);
-      const node = items.reduce((item, row) => {
-        Object.keys(row).map((m, i) => {
-          item[m] = Object.values(row)[i];
-          return item;
-        });
-        return item;
-      }, {});
-      return out.concat(node);
-    },
-    []
-  );
+  const listMap = parseRss(detail.elements);
+  const src = currentTrack?.url;
 
   const trackList = listMap?.filter((f) => !!f['itunes:duration'] && !!f.url);
-  // const titleNode = listMap?.find((f) => !!f.generator);
-  const imageNode =
-    listMap?.find(
-      (f) =>
-        !!f.href && (f.href.indexOf('jpg') > 0 || f.href.indexOf('jpeg') > 0)
-    ) || {};
+
+  if (!trackList.length) {
+    return <>No results</>;
+  }
 
   const PAGE_SIZE = 5;
   const pageCount = Math.ceil(trackList.length / PAGE_SIZE);
   const startNum = (page - 1) * PAGE_SIZE;
-  const visible = trackList?.slice(startNum, startNum + PAGE_SIZE);
+  const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
 
   const subscribed = subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
   const imageProps = getImageProps(listMap);
@@ -162,12 +99,7 @@ const PodDetail = ({
           </Box>
         </Stack>
       )}
-      {/* <BackButton send={send} />  */}
-      {/* [{source}] */}
-      {/* <pre>
-[{JSON.stringify(subscribed,0,3)}]
-</pre> */}
-      {/* [{JSON.stringify(subscriptions)}] */}
+
       <Box sx={{ width: '50vw' }}>
         {pageCount > 1 && (
           <Box sx={{ ml: 10 }}>
@@ -192,11 +124,11 @@ const PodDetail = ({
               }}
             >
               <ListItemAvatar>
-                {(track?.href || imageNode?.href) && (
+                {(track?.href || imageProps?.image) && (
                   <Avatar
                     variant="rounded"
                     sx={{ width: 60, height: 60, mr: 1 }}
-                    src={track?.href || imageNode?.href}
+                    src={track?.href || imageProps?.image}
                   ></Avatar>
                 )}
               </ListItemAvatar>
@@ -210,7 +142,7 @@ const PodDetail = ({
                         track: {
                           ...track,
                           owner: imageProps?.title,
-                          image: track?.href || imageNode?.href,
+                          image: track?.href || imageProps?.image,
                         },
                       });
                     }}
@@ -237,16 +169,26 @@ const PodDetail = ({
                             type: 'PLAY',
                             track: {
                               ...track,
-                              image: track?.href || imageNode?.href,
+                              owner: imageProps?.title,
+                              image: track?.href || imageProps?.image,
                             },
                           });
                         }}
-                        endIcon={<i className="fa-solid fa-play fa-2xs"></i>}
+                        endIcon={
+                          <i
+                            className={
+                              track.url === src
+                                ? 'fa-regular fa-circle-stop'
+                                : 'fa-solid fa-play fa-2xs'
+                            }
+                          ></i>
+                        }
                         size="small"
                         variant="outlined"
                       >
-                        Play
+                        {track.url === src ? 'Stop' : 'Play'}
                       </Button>
+                      {/* [{src}] [{track.url}] */}
                       <Typography variant="caption">
                         {track['itunes:duration']}
                       </Typography>
@@ -267,26 +209,7 @@ const PodDetail = ({
             </ListItem>
           ))}
         </List>
-        {/* [ <pre>{JSON.stringify(listMap, 0, 2)}</pre>] */}
       </Box>
-
-      {/* <Stack
-        direction="row"
-        spacing={2}
-        sx={{ maxWidth: '80vw', alignItems: 'flex-start' }}
-      >
-      </Stack> */}
-      {/* 
- <pre>
-    {JSON.stringify(imageProps,0,2)}
-    </pre> */}
-      {/*
-<pre>
-    {JSON.stringify(imageNode,0,2)}
-    </pre>
-    <pre>
-    {JSON.stringify(detail.elements,0,2)}
-    </pre> */}
     </Layout>
   );
 };

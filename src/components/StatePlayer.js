@@ -14,11 +14,11 @@ import Marquee from 'react-fast-marquee';
 import { useMachine } from '@xstate/react';
 import { audioMachine } from '../machines';
 import { AudioConnector, frameLooper } from './eq';
-import { Diagnostics } from '.';
+// import { Diagnostics } from '.';
 
 const Bureau = styled(Paper)(({ open }) => ({
   position: 'fixed',
-  bottom: open ? 0 : '134vh',
+  bottom: open ? 0 : '-134vh',
   transition: 'bottom 0.2s linear',
   left: 0,
   width: '100vw',
@@ -74,7 +74,7 @@ export const useStatePlayer = () => {
   };
   const [state, send] = useMachine(audioMachine, { services });
 
-  const { duration, src } = state.context;
+  const { duration, currentTime, src } = state.context;
 
   const idle = state.matches('idle');
 
@@ -83,6 +83,15 @@ export const useStatePlayer = () => {
     send({
       type: 'SEEK',
       value: duration * percent,
+    });
+  };
+
+  const handleSkip = (secs) => {
+    // alert(currentTime);
+    // const percent = newValue / 100;
+    send({
+      type: 'SEEK',
+      value: currentTime + Number(secs),
     });
   };
 
@@ -133,10 +142,31 @@ export const useStatePlayer = () => {
     // player methods
     handleClose,
     handleSeek,
+    handleSkip,
     handlePlay,
     handleEq,
     ...state.context,
   };
+};
+
+const Progress = ({ progress, handleSeek }) => {
+  const open = Boolean(progress);
+  if (!open)
+    return (
+      <>
+        <LinearProgress />
+        <Typography>Loading audio...</Typography>
+      </>
+    );
+  return (
+    <Slider
+      min={0}
+      max={100}
+      sx={{ width: '100%' }}
+      onChange={handleSeek}
+      value={progress}
+    />
+  );
 };
 
 const StatePlayer = ({
@@ -150,10 +180,12 @@ const StatePlayer = ({
   handleClose,
   handleSeek,
   handlePlay,
+  handleSkip,
   handleEq,
 
   // context vars
   title,
+  owner,
   image,
   progress,
   duration,
@@ -203,9 +235,10 @@ const StatePlayer = ({
         )}
 
         <Stack sx={{ width: 300 }}>
+          <Typography>{owner}</Typography>
           <Text scrolling={scrolling}>
             <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
-              {JSON.stringify(scrolling)} {title}
+              {title}
             </Typography>
           </Text>
 
@@ -213,7 +246,10 @@ const StatePlayer = ({
         </Stack>
 
         <Stack direction="row">
-          <IconButton sx={{ position: 'relative' }}>
+          <IconButton
+            onClick={() => handleSkip(-30)}
+            sx={{ position: 'relative' }}
+          >
             <i class="fa-solid fa-arrow-rotate-left"></i>
             <Typography
               variant="caption"
@@ -225,11 +261,14 @@ const StatePlayer = ({
           <IconButton size="large" onClick={() => handlePlay()}>
             {icon}
           </IconButton>
-          <IconButton sx={{ position: 'relative' }}>
+          <IconButton
+            onClick={() => handleSkip(30)}
+            sx={{ position: 'relative' }}
+          >
             <i class="fa-solid fa-arrow-rotate-right"></i>
             <Typography
               variant="caption"
-              sx={{ fontSize: '0.6rem', position: 'absolute' }}
+              sx={{ fontSize: '0.5rem', position: 'absolute' }}
             >
               30
             </Typography>
@@ -241,15 +280,8 @@ const StatePlayer = ({
         <Box sx={{ ml: 1, mr: 1, width: 'calc(100vw - 500px)' }}>
           {/* {!progress && <LinearProgress />} */}
           {/* {!progress && <>loading...</>} */}
-          {!!progress && (
-            <Slider
-              min={0}
-              max={100}
-              sx={{ width: '100%' }}
-              onChange={handleSeek}
-              value={progress}
-            />
-          )}
+
+          <Progress progress={progress} handleSeek={handleSeek} />
         </Box>
 
         <Typography variant="caption">{duration_formatted}</Typography>

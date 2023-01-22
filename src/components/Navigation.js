@@ -1,29 +1,33 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
 
-const Navigation = ({ state, states, stateKey, send }) => {
-  if (state.matches('idle')) return <i />;
+const Navigation = ({ state, event, send }) => {
+  const { view } = state.context;
 
-  const event =
-    typeof state.value === 'string'
-      ? states[state.value]
-      : states[Object.keys(state.value)[0]].states[
-          Object.values(state.value)[0]
-        ];
-  if (!event) return <>{JSON.stringify(state.value)}</>;
+  if (view === 'home' && !(!!event.on.CLOSE || !!event.on.HOME)) return <i />;
+
+  // if (view === 'home' || !(!!event.on.CLOSE || !!event.on.HOME))
+  //   return <i/>;
+
+  const handleClick = () => {
+    if (event.on.CLOSE || event.on.HOME) {
+      return send(event.on.HOME ? 'HOME' : 'CLOSE');
+    }
+    send({
+      type: 'LINK',
+      view: 'home',
+    });
+  };
 
   return (
     <Stack
       sx={{ alignItems: 'center', cursor: 'pointer', p: 2 }}
       direction="row"
       spacing={1}
-      onClick={() => {
-        send('CLOSE');
-      }}
+      onClick={handleClick}
     >
       <i className="fa-solid fa-arrow-left"></i>
       <Typography>back</Typography>
-      {/* {stateKey} */}
     </Stack>
   );
 };

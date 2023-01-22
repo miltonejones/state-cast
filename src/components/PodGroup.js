@@ -1,8 +1,22 @@
 import React from 'react';
-import { Button, Box, Typography, Stack } from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import { CastCard } from '.';
 
+const Btn = ({ label, icon, onClick }) => {
+  return (
+    <Typography onClick={onClick} sx={{ cursor: 'pointer' }}>
+      {label} {icon}
+    </Typography>
+  );
+};
+
 const PodGroup = ({ name, group, send }) => {
+  const handleSearch = () => {
+    send({
+      type: 'SEARCH',
+      value: name,
+    });
+  };
   return (
     <>
       <Stack
@@ -11,16 +25,11 @@ const PodGroup = ({ name, group, send }) => {
       >
         <Typography variant="h6">{name}</Typography>
 
-        <Button
-          onClick={() => {
-            send({
-              type: 'SEARCH',
-              value: name,
-            });
-          }}
-        >
-          more
-        </Button>
+        <Btn
+          onClick={handleSearch}
+          icon={<i class="fa-solid fa-arrow-right"></i>}
+          label="More"
+        ></Btn>
       </Stack>
 
       <Box

@@ -7,76 +7,132 @@ export const podcastMachine = createMachine(
     context: {
       param: '',
       page: 1,
+      view: 'home',
+      settings: false,
       subscriptions: [],
     },
     states: {
       begin: {
-        invoke: {
-          src: 'setSubscriptions',
-          onDone: [
-            {
-              target: 'idle',
-              actions: ['initSubscription', 'initPods'],
+        initial: 'loading',
+        states: {
+          error: {
+            on: {
+              RECOVER: {
+                target: '#podcast_machine.navigate',
+              },
             },
-          ],
-        },
-      },
-      idle: {
-        on: {
-          SEARCH: {
-            target: 'searching',
-            actions: ['initSubscription', 'assignParamToContext'],
           },
-          CHANGE: {
-            target: 'idle',
-            actions: 'assignParamToContext',
-          },
-          BROWSE: {
-            target: 'shows',
-            actions: 'initSubscription',
-          },
-          DETAIL: {
-            target: 'podcast_detail',
-            actions: 'assignDetailToContext',
-          },
-        },
-      },
-      search_error: {
-        on: {
-          RECOVER: {
-            target: 'results',
-          },
-        },
-      },
-      searching: {
-        invoke: {
-          src: 'beginSearch',
-          onDone: [
-            {
-              target: 'results',
-              actions: 'assignResultsToContext',
+          loading: {
+            invoke: {
+              src: 'setSubscriptions',
+              onDone: [
+                {
+                  target: '#podcast_machine.navigate',
+                  actions: ['initSubscription', 'initPods'],
+                },
+              ],
+              onError: [
+                {
+                  target: 'error',
+                  actions: 'assignProblem',
+                },
+              ],
             },
-          ],
-          onError: [
-            {
-              target: 'search_error',
-            },
-          ],
+          },
         },
       },
-      shows: {
-        on: {
-          DETAIL: {
-            target: 'podcast_detail',
-            actions: 'assignShowToContext',
-          },
+      navigate: {
+        initial: 'list',
 
-          CLOSE: {
-            target: 'idle',
+        states: {
+          list: {
+            on: {
+              LINK: {
+                target: 'list',
+                actions: assign({
+                  view: (context, event) => event.view,
+                }),
+              },
+
+              SETTINGS: {
+                target: 'list',
+                actions: assign({
+                  settings: (context, event) => !!event.settings,
+                }),
+              },
+
+              DETAIL: {
+                target: '#podcast_machine.detail',
+                actions: 'assignDetailToContext',
+              },
+
+              // search support
+              SEARCH: {
+                target: '#podcast_machine.search',
+                actions: ['initSubscription', 'assignParamToContext'],
+              },
+              CHANGE: {
+                actions: 'assignParamToContext',
+              },
+            },
           },
         },
       },
-      podcast_detail: {
+      search: {
+        initial: 'begin',
+        states: {
+          error: {
+            on: {
+              RECOVER: {
+                target: '#podcast_machine.navigate',
+              },
+            },
+          },
+          loaded: {
+            on: {
+              LINK: {
+                target: '#podcast_machine.navigate',
+                actions: assign({
+                  view: (context, event) => event.view,
+                }),
+              },
+              CLOSE: {
+                target: '#podcast_machine.navigate',
+              },
+              DETAIL: {
+                target: '#podcast_machine.detail',
+                actions: 'assignDetailToContext',
+              },
+              SUBSCRIBE: {
+                target: 'loaded',
+                actions: 'assignSubscription',
+              },
+              PAGE: {
+                actions: 'assignPage',
+                target: 'loaded',
+              },
+            },
+          },
+          begin: {
+            invoke: {
+              src: 'beginSearch',
+              onDone: [
+                {
+                  target: 'loaded',
+                  actions: 'assignResultsToContext',
+                },
+              ],
+              onError: [
+                {
+                  target: 'error',
+                  actions: 'assignProblem',
+                },
+              ],
+            },
+          },
+        },
+      },
+      detail: {
         initial: 'loading',
         states: {
           loaded: {
@@ -87,16 +143,16 @@ export const podcastMachine = createMachine(
               },
               CLOSE: [
                 {
-                  target: '#podcast_machine.results',
+                  target: '#podcast_machine.search.loaded',
                   cond: (context) => context.source === 'results',
                 },
                 {
-                  target: '#podcast_machine.shows',
+                  target: '#podcast_machine.navigate',
                 },
               ],
-              HOME: {
-                target: '#podcast_machine.idle',
-              },
+              // HOME: {
+              //   target: '#podcast_machine.navigate',
+              // },
               PAGE: {
                 actions: 'assignPage',
                 target: 'loaded',
@@ -105,12 +161,27 @@ export const podcastMachine = createMachine(
                 target: 'loaded',
                 actions: 'assignSubscription',
               },
+
+              LINK: {
+                target: '#podcast_machine.navigate',
+                actions: assign({
+                  view: (context, event) => event.view,
+                }),
+              },
+              // search support
+              SEARCH: {
+                target: '#podcast_machine.search',
+                actions: ['initSubscription', 'assignParamToContext'],
+              },
+              CHANGE: {
+                actions: 'assignParamToContext',
+              },
             },
           },
           error: {
             on: {
               RECOVER: {
-                target: '#podcast_machine.results',
+                target: '#podcast_machine.navigate',
               },
             },
           },
@@ -146,34 +217,6 @@ export const podcastMachine = createMachine(
                 },
               ],
             },
-          },
-        },
-      },
-      // playing: {
-      //   invoke: {
-      //     src: 'spawnPlayer',
-      //   },
-      //   on: {
-      //     CLOSE: {
-      //       target: 'podcast_detail.loaded',
-      //     },
-      //     HOME: {
-      //       target: 'idle',
-      //     },
-      //   },
-      // },
-      results: {
-        on: {
-          CLOSE: {
-            target: 'idle',
-          },
-          DETAIL: {
-            target: 'podcast_detail',
-            actions: 'assignDetailToContext',
-          },
-          PAGE: {
-            actions: 'assignPage',
-            target: 'results',
           },
         },
       },
@@ -225,14 +268,6 @@ export const podcastMachine = createMachine(
         };
       }),
 
-      assignShowToContext: assign((context, event) => {
-        return {
-          podcast: event.podcast,
-          previous: event.type,
-          source: 'show',
-          page: 1,
-        };
-      }),
       assignTrack: assign((context, event) => {
         // alert (JSON.stringify({event}))
         return {
@@ -264,13 +299,22 @@ export const podcastMachine = createMachine(
       }),
 
       assignSubscription: assign((context, event) => {
-        const subs = (context.subscriptions || []).concat(event.podcast);
+        const node = context.subscriptions || [];
+
+        const subs = node.find((f) => f.feedUrl === event.podcast.feedUrl)
+          ? node.filter((f) => f.feedUrl !== event.podcast.feedUrl)
+          : node.concat(event.podcast);
         localStorage.setItem('subs', JSON.stringify(subs));
         return {
           subscriptions: subs,
         };
       }),
 
+      assignView: assign((context, event) => {
+        return {
+          view: event.view,
+        };
+      }),
       assignPodcast: assign((context, event) => {
         // alert (JSON.stringify({event}))
         return {

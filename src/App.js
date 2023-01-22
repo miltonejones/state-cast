@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { podcastMachine } from './machines';
 import { useMachine } from '@xstate/react';
 import {
+  CategoryList,
   Diagnostics,
   HomeScreen,
   Navigation,
@@ -15,6 +16,7 @@ import {
   Toolbar,
   useStatePlayer,
 } from './components';
+import { Outer, Inner } from './components/styled';
 import convert from 'xml-js';
 import { getEvent } from './util';
 import './style.css';
@@ -50,57 +52,52 @@ export default function App() {
 
   const forms = {
     idle: HomeScreen,
-    results: SearchResults,
-    shows: Subscriptions,
+    'search.loaded': SearchResults,
     begin: Wait,
     searching: Wait,
-    'podcast_detail.loading': Wait,
-    // 'podcast_detail.error': ErrorPage,
-    'podcast_detail.loaded': PodDetail,
+    'detail.loading': Wait,
+    'detail.loaded': PodDetail,
+  };
+
+  const lists = {
+    home: HomeScreen,
+    subs: Subscriptions,
+    list: CategoryList,
   };
 
   const stateKey = Object.keys(forms).find(state.matches);
   const Form = forms[stateKey];
-  const width = state.matches('podcast_detail.loaded') ? '100vw' : '50vw';
+  const List = lists[state.context.view];
   const event = getEvent(podcastMachine.states, state);
+  const childProps = {
+    send,
+    state,
+    event,
+    stateKey,
+  };
 
   return (
     <>
-      <Box sx={{ m: 0, p: 0, marginBottom: 60 }}>
-        <Toolbar
-          send={send}
-          state={state}
-          param={state.context.param}
-          event={event}
-        />
-        <Navigation
-          send={send}
-          state={state}
-          stateKey={stateKey}
-          states={podcastMachine.states}
-        />
-        <Box
-          sx={{
-            width: '100vw',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              width,
-              overflow: 'hidden',
-            }}
-          >
+      <Box sx={{ mb: 20 }}>
+        <Toolbar {...childProps} {...state.context} />
+
+        <Navigation {...childProps} />
+
+        <Outer>
+          <Inner wide={state.matches('detail.loaded')}>
             {!!Form && (
               <Form send={send} stateKey={stateKey} {...state.context} />
             )}
-          </Box>
-        </Box>
+            {!!List && !Form && (
+              <List send={send} stateKey={stateKey} {...state.context} />
+            )}
+          </Inner>
+        </Outer>
 
         <Diagnostics
           id={podcastMachine.id}
           state={state}
+          send={send}
           states={podcastMachine.states}
         />
       </Box>

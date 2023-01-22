@@ -7,6 +7,7 @@ import {
   Typography,
   Stack,
   styled,
+  IconButton,
 } from '@mui/material';
 
 const NavLink = styled(Typography)(({ active }) => ({
@@ -14,13 +15,19 @@ const NavLink = styled(Typography)(({ active }) => ({
   cursor: 'pointer',
 }));
 
-const Toolbar = ({ send, param, state, event }) => {
+const Toolbar = ({ send, settings, param, view, event }) => {
   const handleParamChange = (event) => {
     send({
       type: 'CHANGE',
       value: event.target.value,
     });
   };
+
+  const handleNavigate = (where) =>
+    send({
+      type: 'LINK',
+      view: where,
+    });
   return (
     <Stack
       direction="row"
@@ -44,20 +51,25 @@ const Toolbar = ({ send, param, state, event }) => {
 
       <Box sx={{ pl: 8 }}>
         <NavLink
-          active={state.matches('idle')}
-          onClick={() => send(event.on.HOME ? 'HOME' : 'CLOSE')}
+          active={view === 'home'}
+          onClick={() => handleNavigate('home')}
         >
           Home
         </NavLink>
       </Box>
       <Box sx={{ pl: 4 }}>
-        <NavLink>Categories</NavLink>
+        <NavLink
+          active={view === 'list'}
+          onClick={() => handleNavigate('list')}
+        >
+          Categories
+        </NavLink>
       </Box>
       <Box sx={{ ml: 4 }}>
         <NavLink
-          active={state.matches('shows')}
+          active={view === 'subs'}
+          onClick={() => handleNavigate('subs')}
           sx={{ ml: 2 }}
-          onClick={() => send('BROWSE')}
         >
           Subscriptions
         </NavLink>
@@ -80,10 +92,29 @@ const Toolbar = ({ send, param, state, event }) => {
           <Button
             endIcon={<i class="fa-solid fa-magnifying-glass"></i>}
             variant="contained"
+            onClick={() => send('SEARCH')}
             sx={{ ml: 1 }}
           >
             search
           </Button>
+          {event.on.SETTINGS && (
+            <IconButton
+              onClick={() =>
+                send({
+                  type: 'SETTINGS',
+                  settings: !settings,
+                })
+              }
+            >
+              <i
+                className={
+                  settings
+                    ? 'fa-solid fa-diagram-predecessor'
+                    : 'fa-solid fa-diagram-successor'
+                }
+              ></i>
+            </IconButton>
+          )}
           {/* <i class="fa-solid fa-magnifying-glass"></i> */}
         </Box>
       </Collapse>
