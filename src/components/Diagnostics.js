@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import {
   styled,
   Typography,
@@ -18,7 +18,7 @@ const ChipBody = ({ children }) => {
       {children}
     </Typography>
   );
-};
+}; 
 
 const TargetNode = ({ id, target, prefix }) => {
   const item = Array.isArray(target) ? target.pop() : target;
