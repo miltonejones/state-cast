@@ -9,6 +9,9 @@ import Toolbar from './Toolbar';
 import PodDetail from './PodDetail';
 import PodGroup from './PodGroup';
 import CategoryList from './CategoryList';
+import StateCarousel from './StateCarousel';
+import SettingsMenu from './SettingsMenu';
+import SettingsButton from './SettingsButton';
 
 export {
   CastCard,
@@ -19,9 +22,12 @@ export {
   PodDetail,
   PodGroup,
   SearchResults,
+  SettingsButton,
   StatePlayer,
   Subscriptions,
   SubscriptionList,
+  StateCarousel,
+  SettingsMenu,
   Toolbar,
   useStatePlayer,
   Wait,

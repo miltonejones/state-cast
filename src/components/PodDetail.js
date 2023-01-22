@@ -32,7 +32,10 @@ const PodDetail = ({
   page = 1,
   send,
 }) => {
-  const listMap = parseRss(detail.elements);
+  const detailJSON = typeof detail === 'string' ? JSON.parse(detail) : detail;
+
+  // return <pre>{JSON.stringify(detailJSON, 0, 6)}</pre>;
+  const listMap = parseRss(detailJSON.elements);
   const src = currentTrack?.url;
 
   const trackList = listMap?.filter((f) => !!f['itunes:duration'] && !!f.url);
@@ -144,6 +147,7 @@ const PodDetail = ({
                           owner: imageProps?.title,
                           image: track?.href || imageProps?.image,
                         },
+                        trackList,
                       });
                     }}
                     dangerouslySetInnerHTML={{ __html: track.title }}
@@ -188,7 +192,6 @@ const PodDetail = ({
                       >
                         {track.url === src ? 'Stop' : 'Play'}
                       </Button>
-                      {/* [{src}] [{track.url}] */}
                       <Typography variant="caption">
                         {track['itunes:duration']}
                       </Typography>

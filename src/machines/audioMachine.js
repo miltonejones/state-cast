@@ -190,10 +190,8 @@ export const audioMachine = createMachine(
       }),
       assignSourceToContext: assign((context, event) => {
         return {
+          ...event,
           src: event.value,
-          title: event.title,
-          image: event.image,
-          owner: event.owner,
           scrolling: event.title?.length > 35,
         };
       }),

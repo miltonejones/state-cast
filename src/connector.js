@@ -1,6 +1,6 @@
 const API_ENDPOINT = 'https://itunes.apple.com/search';
 const RSS_ENDPOINT =
-  'https://ef9jmtk9rk.execute-api.us-east-1.amazonaws.com/rss';
+  'https://ef9jmtk9rk.execute-api.us-east-1.amazonaws.com/json';
 
 export const getPodcasts = async (term) => {
   const response = await fetch(
@@ -19,7 +19,7 @@ export const getPodcast = async (url) => {
   const response = await fetch(RSS_ENDPOINT, requestOptions);
   try {
     const res = await response.text();
-    // alert   (res);
+
     return res;
   } catch (e) {
     console.log({ 'setApplication error': e });

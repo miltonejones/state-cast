@@ -8,13 +8,14 @@ import {
   Box,
   LinearProgress,
   Typography,
+  Drawer,
   styled,
 } from '@mui/material';
 import Marquee from 'react-fast-marquee';
 import { useMachine } from '@xstate/react';
 import { audioMachine } from '../machines';
 import { AudioConnector, frameLooper } from './eq';
-// import { Diagnostics } from '.';
+import { Diagnostics } from '.';
 
 const Bureau = styled(Paper)(({ open }) => ({
   position: 'fixed',
@@ -95,7 +96,7 @@ export const useStatePlayer = () => {
     });
   };
 
-  const handlePlay = (value, title, image, owner) => {
+  const handlePlay = (value, title, image, owner, trackList) => {
     const replay = !!value && value !== src;
     if (state.matches('idle.loaded') || replay) {
       return send({
@@ -104,6 +105,7 @@ export const useStatePlayer = () => {
         title,
         image,
         owner,
+        trackList,
       });
     }
 
@@ -174,6 +176,7 @@ const StatePlayer = ({
   idle,
   state,
   states,
+  debug,
   id,
 
   // player methods
@@ -193,6 +196,7 @@ const StatePlayer = ({
   current_time_formatted,
   duration_formatted,
   coords,
+  trackList,
   eq,
   ...rest
 }) => {
@@ -245,10 +249,10 @@ const StatePlayer = ({
           {/* <Typography variant="body1">{title}</Typography> */}
         </Stack>
 
-        <Stack direction="row">
+        <Stack direction="row" sx={{ alignItems: 'center' }}>
           <IconButton
             onClick={() => handleSkip(-30)}
-            sx={{ position: 'relative' }}
+            sx={{ position: 'relative', width: 40, height: 40 }}
           >
             <i class="fa-solid fa-arrow-rotate-left"></i>
             <Typography
@@ -263,7 +267,7 @@ const StatePlayer = ({
           </IconButton>
           <IconButton
             onClick={() => handleSkip(30)}
-            sx={{ position: 'relative' }}
+            sx={{ position: 'relative', width: 40, height: 40 }}
           >
             <i class="fa-solid fa-arrow-rotate-right"></i>
             <Typography
@@ -359,7 +363,7 @@ const StatePlayer = ({
           )}
         </Typography> */}
 
-        {/* <Diagnostics id={id} state={state} states={states} /> */}
+        <Diagnostics id={id} state={state} states={states} open={debug} />
       </Box>
     </Bureau>
   );

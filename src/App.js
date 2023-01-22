@@ -17,7 +17,6 @@ import {
   useStatePlayer,
 } from './components';
 import { Outer, Inner } from './components/styled';
-import convert from 'xml-js';
 import { getEvent } from './util';
 import './style.css';
 
@@ -32,16 +31,16 @@ export default function App() {
     getDetail: async (context) => {
       const { feedUrl } = context.podcast;
       const pod = await getPodcast(feedUrl);
-      const json = convert.xml2js(pod);
-      return json;
+      return pod;
     },
 
     spawnPlayer: async (context) => {
-      const { url, title, image, owner } = context.track;
-      media.handlePlay(url, title, image, owner);
+      const { track, trackList } = context;
+      const { url, title, image, owner } = track;
+      media.handlePlay(url, title, image, owner, trackList);
     },
 
-    setSubscriptions: async (context) => {
+    setSubscriptions: async () => {
       const pods = await getPodcasts('popular');
       await new Promise((go) => setTimeout(go, 499));
       return pods.results;
@@ -95,6 +94,7 @@ export default function App() {
         </Outer>
 
         <Diagnostics
+          open={state.context.settings === 'podcast_machine'}
           id={podcastMachine.id}
           state={state}
           send={send}
@@ -102,7 +102,10 @@ export default function App() {
         />
       </Box>
 
-      <StatePlayer {...media} />
+      <StatePlayer
+        {...media}
+        debug={state.context.settings === 'audio_player'}
+      />
     </>
   );
 }

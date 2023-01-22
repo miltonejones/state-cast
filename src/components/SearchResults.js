@@ -59,6 +59,7 @@ const SearchResults = ({ results, subscriptions, param, page, send }) => {
                 send({
                   type: 'DETAIL',
                   podcast: t,
+                  source: 'results',
                 });
               }}
             >

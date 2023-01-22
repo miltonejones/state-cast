@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 
 export const Outer = styled(Box)(() => ({
   width: '100vw',
@@ -10,4 +10,8 @@ export const Outer = styled(Box)(() => ({
 export const Inner = styled(Box)(({ wide }) => ({
   width: wide ? '100vw' : '50vw',
   overflow: 'hidden',
+}));
+
+export const Btn = styled(Button)(() => ({
+  textTransform: 'capitalize',
 }));

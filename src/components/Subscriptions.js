@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Stack,
-  Button,
   Box,
   Card,
   Typography,
   CardMedia,
   CardContent,
 } from '@mui/material';
+import { Btn } from './styled';
 
 export const CastCard = ({ subscription, send, source }) => {
   return (
@@ -62,7 +62,7 @@ export const SubscriptionList = ({
         </Typography>
 
         {view !== 'subs' && (
-          <Button
+          <Btn
             endIcon={<i class="fa-solid fa-arrow-right"></i>}
             onClick={() =>
               send({
@@ -72,7 +72,7 @@ export const SubscriptionList = ({
             }
           >
             view all
-          </Button>
+          </Btn>
         )}
       </Stack>
 
@@ -85,8 +85,13 @@ export const SubscriptionList = ({
           gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
         }}
       >
-        {visible.map((subscription) => (
-          <CastCard subscription={subscription} send={send} source={source} />
+        {visible.map((subscription, i) => (
+          <CastCard
+            key={i}
+            subscription={subscription}
+            send={send}
+            source={source}
+          />
         ))}
       </Box>
     </>
@@ -98,13 +103,7 @@ const Subscriptions = (props) => {
     return <>You have no subscriptions</>;
   }
 
-  return (
-    <Box data-testid="test-for-Subscriptions">
-      {/* <BackButton send={props.send} />  */}
-
-      <SubscriptionList {...props} />
-    </Box>
-  );
+  return <SubscriptionList {...props} />;
 };
 Subscriptions.defaultProps = {};
 export default Subscriptions;

@@ -57,7 +57,7 @@ export const podcastMachine = createMachine(
               SETTINGS: {
                 target: 'list',
                 actions: assign({
-                  settings: (context, event) => !!event.settings,
+                  settings: (context, event) => event.settings,
                 }),
               },
 

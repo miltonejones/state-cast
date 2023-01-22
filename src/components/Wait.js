@@ -8,8 +8,8 @@ const Wait = ({ stateKey, podcast, param }) => {
     'detail.loading': `Getting "${podcast?.trackName}"`,
   };
   return (
-    <Stack>
-      <Typography variant="body2">{messages[stateKey] || stateKey}</Typography>
+    <Stack sx={{ m: 4 }}>
+      <Typography variant="body1">{messages[stateKey] || stateKey}</Typography>
 
       <LinearProgress />
     </Stack>

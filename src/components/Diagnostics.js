@@ -116,8 +116,8 @@ const StateName = ({ state }) => {
   );
 };
 
-const Diagnostics = ({ id, send, state, states }) => {
-  const { previous, settings: open } = state.context;
+const Diagnostics = ({ id, send, state, states, open, layer }) => {
+  const { previous } = state.context;
   const event = getEvent(states, state);
 
   if (!event) return <>{JSON.stringify(state.value)}</>;
@@ -132,7 +132,7 @@ const Diagnostics = ({ id, send, state, states }) => {
   };
 
   return (
-    <Snackbar open={open} anchorOrigin={anchorOrigin}>
+    <Snackbar key={id} open={open} anchorOrigin={anchorOrigin}>
       <Card sx={{ mt: 2, width: 'fit-content', minWidth: 400 }}>
         <Layout data-testid="test-for-Diagnostics">
           <Stack direction="row" sx={{ alignItems: 'center' }}>
@@ -161,7 +161,7 @@ const Diagnostics = ({ id, send, state, states }) => {
               <StateName state={state.value} />
             </b>
           </Typography>
-          
+
           <Divider sx={{ m: (t) => t.spacing(0.5, 0) }} />
           {!!previous && (
             <>
