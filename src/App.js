@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { podcastMachine } from './machines';
 import { useMachine } from '@xstate/react';
 import {
+  About,
   CategoryList,
   Diagnostics,
   HomeScreen,
@@ -62,6 +63,7 @@ export default function App() {
     home: HomeScreen,
     subs: Subscriptions,
     list: CategoryList,
+    about: About,
   };
 
   const stateKey = Object.keys(forms).find(state.matches);
