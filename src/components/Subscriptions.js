@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Stack,
-  Button,
   Box,
   Card,
   Typography,
   CardMedia,
   CardContent,
 } from '@mui/material';
+import { Btn } from './styled';
 
 export const CastCard = ({ subscription, send, source }) => {
   return (
@@ -46,9 +46,9 @@ export const CastCard = ({ subscription, send, source }) => {
 export const SubscriptionList = ({
   subscriptions,
   send,
-  pods,
   source,
   limit,
+  view,
 }) => {
   const visible = !limit ? subscriptions : subscriptions.slice(0, limit);
   return (
@@ -61,7 +61,19 @@ export const SubscriptionList = ({
           {subscriptions.length} Subscriptions
         </Typography>
 
-        <Button onClick={() => send('BROWSE')}>view all</Button>
+        {view !== 'subs' && (
+          <Btn
+            endIcon={<i class="fa-solid fa-arrow-right"></i>}
+            onClick={() =>
+              send({
+                type: 'LINK',
+                view: 'subs',
+              })
+            }
+          >
+            view all
+          </Btn>
+        )}
       </Stack>
 
       <Box
@@ -73,31 +85,13 @@ export const SubscriptionList = ({
           gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
         }}
       >
-        {visible.map((subscription) => (
-          <CastCard subscription={subscription} send={send} source={source} />
-          // <Card
-          // key={subscription.artworkUrl100}
-          // onClick={() => {
-          //   send({
-          //     type: 'DETAIL',
-          //     podcast: subscription,
-          //     source
-          //   })
-          // }} sx={{width: 200, cursor: 'pointer'}}>
-          //   <CardMedia
-          //     component="img"
-          //     width="200"
-          //     height="200"
-          //     image={subscription.artworkUrl100}
-          //     alt={subscription.trackName}
-          //     />
-          // <CardContent>
-          //   <Typography variant="body2" color="text.secondary">
-          //     {subscription.trackName}
-          //   </Typography>
-          // </CardContent>
-
-          // </Card>
+        {visible.map((subscription, i) => (
+          <CastCard
+            key={i}
+            subscription={subscription}
+            send={send}
+            source={source}
+          />
         ))}
       </Box>
     </>
@@ -109,13 +103,7 @@ const Subscriptions = (props) => {
     return <>You have no subscriptions</>;
   }
 
-  return (
-    <Box data-testid="test-for-Subscriptions">
-      {/* <BackButton send={props.send} />  */}
-
-      <SubscriptionList {...props} />
-    </Box>
-  );
+  return <SubscriptionList {...props} />;
 };
 Subscriptions.defaultProps = {};
 export default Subscriptions;

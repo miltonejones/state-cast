@@ -7,12 +7,9 @@ const frameLooper = (analyser, fn) => {
     window.webkitRequestAnimationFrame(repeater);
 
   const fbc_array = new Uint8Array(analyser.frequencyBinCount);
-  const bar_count = 32; //window.innerWidth / 2;
+  const bar_count = 32; 
 
-  analyser.getByteFrequencyData(fbc_array);
-
-  // context.clearRect(0, 0, canvas.width, canvas.height);
-  // context.fillStyle = "#ffffff";
+  analyser.getByteFrequencyData(fbc_array); 
 
   const coords = [];
 
