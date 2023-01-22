@@ -85,6 +85,14 @@ const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
           </NavLink>
         </Badge>
       </Box>
+      <Box sx={{ pl: 4 }}>
+        <NavLink
+          active={view === 'about'}
+          onClick={() => handleNavigate('about')}
+        >
+          About
+        </NavLink>
+      </Box>
       <Box sx={{ flexGrow: 1 }} />
       <Collapse in={event.on.SEARCH} orientation="horizontal">
         <Box sx={{ whiteSpace: 'nowrap' }}>

@@ -12,8 +12,10 @@ import CategoryList from './CategoryList';
 import StateCarousel from './StateCarousel';
 import SettingsMenu from './SettingsMenu';
 import SettingsButton from './SettingsButton';
+import About from './About';
 
 export {
+  About,
   CastCard,
   CategoryList,
   Diagnostics,
