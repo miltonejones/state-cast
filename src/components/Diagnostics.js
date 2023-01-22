@@ -1,15 +1,15 @@
 import React from 'react';
 import {
   styled,
-  Typography,
   Divider,
   IconButton,
-  Stack,
   Card,
   Box,
   Snackbar,
+  Chip,
+  Stack,
+  Typography,
 } from '@mui/material';
-import { Chip, Stack, Typography } from '@mui/material';
 import { getEvent } from '../util';
 
 const ChipBody = ({ children }) => {
