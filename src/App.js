@@ -1,6 +1,6 @@
 import React from 'react';
 import { getPodcasts, getPodcast } from './connector';
-import { Box } from '@mui/material';
+import { Box, Divider, Link, Stack, Typography } from '@mui/material';
 import { podcastMachine } from './machines';
 import { useMachine } from '@xstate/react';
 import {
@@ -82,6 +82,7 @@ export default function App() {
       <Box sx={{ mb: 20 }}>
         <Toolbar {...childProps} {...state.context} />
 
+ 
         <Navigation {...childProps} />
 
         <Outer>
@@ -94,7 +95,19 @@ export default function App() {
             )}
           </Inner>
         </Outer>
-
+        <Divider sx={{mt: 2, mb: 2}} />
+        <Stack spacing={1} direction="row" sx={{alignItems: 'center', justifyContent: 'flex-end', pr: 2}}>
+          <Typography>
+            Powered by <Link
+            target="_blank" href="https://xstate.js.org/">xstate</Link>. 
+            {" "}
+            <i class="fa-brands fa-github"></i>
+            {" "}Check out{" "}
+            <Link 
+            target="_blank"
+            href="https://github.com/miltonejones/state-cast"> the repo</Link>.
+          </Typography>
+        </Stack>
         <Diagnostics
           open={state.context.settings === 'podcast_machine'}
           id={podcastMachine.id}

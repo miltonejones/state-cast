@@ -4,13 +4,20 @@ import {
   Divider,
   IconButton,
   Card,
-  Box,
-  Snackbar,
+  Box, 
   Chip,
   Stack,
-  Typography,
+  Typography 
 } from '@mui/material';
 import { getEvent } from '../util';
+
+const IceCream = styled(Box)(({ open }) => ({ 
+  position: 'absolute',
+  left: 20,
+  top: !open ? -400 : 80,
+  transition: 'top 0.4s linear',
+  zIndex: 400
+}))
 
 const ChipBody = ({ children }) => {
   return (
@@ -126,18 +133,15 @@ const Diagnostics = ({ id, send, state, states, open, layer }) => {
   const prefix =
     typeof state.value === 'string' ? state.value : Object.keys(state.value)[0];
 
-  const anchorOrigin = {
-    vertical: 'top',
-    horizontal: 'left',
-  };
+ 
 
   return (
-    <Snackbar key={id} open={open} anchorOrigin={anchorOrigin}>
+    <IceCream key={id} open={!!open ? 1 : 0} >
       <Card sx={{ mt: 2, width: 'fit-content', minWidth: 400 }}>
         <Layout data-testid="test-for-Diagnostics">
           <Stack direction="row" sx={{ alignItems: 'center' }}>
             <Typography variant="body2">
-              Machine ID: <em>"{id}"</em>
+              Machine ID: <em>"{id}"</em> {JSON.stringify(open)}
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             {!!event.on.SETTINGS && (
@@ -199,7 +203,7 @@ const Diagnostics = ({ id, send, state, states, open, layer }) => {
 
         {/* {JSON.stringify(event.on, 0, 2)} */}
       </Card>
-    </Snackbar>
+    </IceCream>
   );
 };
 Diagnostics.defaultProps = {};

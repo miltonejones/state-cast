@@ -39,8 +39,7 @@ const About = () => {
             </Link>{' '}
           </Typography>
         </Stack>
-      ))}
-      t
+      ))} 
     </Stack>
   );
 };
