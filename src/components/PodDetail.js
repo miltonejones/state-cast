@@ -25,39 +25,47 @@ const Layout = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-const PodDetail = ({
-  detail,
-  podcast,
-  track: currentTrack,
-  subscriptions,
-  page = 1,
-  send,
-}) => {
-  const detailJSON = typeof detail === 'string' ? JSON.parse(detail) : detail;
-
-  // return <pre>{JSON.stringify(detailJSON, 0, 6)}</pre>;
-  const listMap = parseRss(detailJSON.elements);
-  const src = currentTrack?.url;
-
-  const trackList = listMap?.filter((f) => !!f['itunes:duration'] && !!f.url);
-
+export const PodDetailList = ({ 
+    minimal,
+    trackList, 
+    imageProps,  
+    descNode, 
+    ...props 
+  }) => {
+  
+  const {
+    detail,
+    podcast,
+    track: currentTrack,
+    subscriptions,
+    page = 1,
+    send,
+  } = props;
   if (!trackList.length) {
     return <>No results</>;
   }
 
+  const src = currentTrack?.url;
   const pages = usePagination(trackList, { page, pageSize: 10 })
-  
-  // const PAGE_SIZE = 5;
-  // const pageCount = Math.ceil(trackList.length / PAGE_SIZE);
-  // const startNum = (page - 1) * PAGE_SIZE;
-  // const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
-
   const subscribed = subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
-  const imageProps = getImageProps(listMap);
-  const descNode = listMap.find((f) => !!f.description);
+
+
+ 
+  const handlePlay = track => {
+    send({
+      type: 'PLAY',
+      track: {
+        ...track,
+        owner: imageProps?.title || imageProps?.['itunes:name'],
+        image: track?.href || imageProps?.image,
+      },
+      trackList,
+    });
+  }
 
   return (
     <Layout data-testid="test-for-PodDetail">
+ 
       {!!imageProps && (
         <Stack
           direction="row"
@@ -106,9 +114,9 @@ const PodDetail = ({
         </Stack>
       )}
 
-      <Box sx={{ width: '50vw' }}>
+      <Box sx={{ width: minimal ? '400px' : '50vw' }}>
         {pages.pageCount > 1 && (
-          <Box sx={{ ml: 10 }}>
+          <Box sx={{ ml: minimal ? 1 : 10 }}>
             <Pagination
               count={pages.pageCount}
               page={page}
@@ -121,7 +129,8 @@ const PodDetail = ({
             />
           </Box>
         )}
-        <List sx={{ ml: 2, maxWidth: '45vw' }}>
+
+        <List sx={{ ml: minimal ? 0 : 2, maxWidth: '45vw' }}>
           {pages.visible.map((track) => (
             <ListItem
               sx={{
@@ -129,7 +138,7 @@ const PodDetail = ({
                 borderColor: 'divider',
               }}
             >
-              <ListItemAvatar>
+              {!!(track?.href || imageProps?.image) && <ListItemAvatar>
                 {(track?.href || imageProps?.image) && (
                   <Avatar
                     variant="rounded"
@@ -137,23 +146,14 @@ const PodDetail = ({
                     src={track?.href || imageProps?.image}
                   ></Avatar>
                 )}
-              </ListItemAvatar>
+              </ListItemAvatar>}
 
               <ListItemText
                 primary={
                   <div
-                    onClick={() => {
-                      send({
-                        type: 'PLAY',
-                        track: {
-                          ...track,
-                          owner: imageProps?.title,
-                          image: track?.href || imageProps?.image,
-                        },
-                        trackList,
-                      });
-                    }}
-                    dangerouslySetInnerHTML={{ __html: track.title }}
+                    style={{cursor: 'pointer'}}
+                    onClick={() => handlePlay(track)}
+                    dangerouslySetInnerHTML={{ __html: track["itunes:title"] || track.title }}
                   />
                 }
                 secondary={
@@ -161,7 +161,7 @@ const PodDetail = ({
                     <Typography
                       variant="body2"
                       dangerouslySetInnerHTML={{
-                        __html: track['itunes:summary']?.substr(0, 200),
+                        __html: track['itunes:summary']?.substr(0, minimal ? 90 : 200),
                       }}
                     ></Typography>
 
@@ -171,16 +171,7 @@ const PodDetail = ({
                       sx={{ mt: 1, alignItems: 'center' }}
                     >
                       <Button
-                        onClick={() => {
-                          send({
-                            type: 'PLAY',
-                            track: {
-                              ...track,
-                              owner: imageProps?.title,
-                              image: track?.href || imageProps?.image,
-                            },
-                          });
-                        }}
+                        onClick={() => handlePlay(track)}
                         endIcon={
                           <i
                             className={
@@ -202,22 +193,58 @@ const PodDetail = ({
                   </Stack>
                 }
               />
-              <ListItemSecondaryAction
-                onClick={() => {
-                  send({
-                    type: 'PLAY',
-                    track,
-                  });
-                }}
+             {!minimal && <ListItemSecondaryAction
+                    onClick={() => handlePlay(track)}
               >
                 <i className="fa-solid fa-chevron-right"></i>
-              </ListItemSecondaryAction>
+              </ListItemSecondaryAction>}
             </ListItem>
           ))}
         </List>
+
       </Box>
     </Layout>
   );
+}
+
+const PodDetail = (props) => {
+  const {
+    detail,
+    podcast,
+    track: currentTrack,
+    subscriptions,
+    page = 1,
+    send,
+  } = props;
+  const detailJSON = typeof detail === 'string' ? JSON.parse(detail) : detail;
+
+  // return <pre>{JSON.stringify(detailJSON, 0, 6)}</pre>;
+  const listMap = parseRss(detailJSON.elements);
+  const src = currentTrack?.url;
+
+
+
+  const trackList = listMap?.filter((f) => !!f['itunes:duration'] && !!f.url);
+
+  if (!trackList.length) {
+    return <>No results</>;
+  }
+
+  const pages = usePagination(trackList, { page, pageSize: 10 })
+  
+  // const PAGE_SIZE = 5;
+  // const pageCount = Math.ceil(trackList.length / PAGE_SIZE);
+  // const startNum = (page - 1) * PAGE_SIZE;
+  // const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
+
+  const subscribed = subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
+  const imageProps = getImageProps(listMap);
+  const descNode = listMap.find((f) => !!f.description);
+
+  
+  return <PodDetailList {...props} trackList={trackList} imageProps={imageProps} descNode={descNode} />
+
+ 
 };
 PodDetail.defaultProps = {};
 export default PodDetail;

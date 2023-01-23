@@ -260,6 +260,7 @@ export const podcastMachine = createMachine(
         return {
           param: event.value || context.param,
           previous: event.type,
+          ...event
         };
       }),
 
@@ -292,6 +293,7 @@ export const podcastMachine = createMachine(
         return {
           track: event.track,
           previous: event.type,
+          trackList: event.trackList
         };
       }),
 

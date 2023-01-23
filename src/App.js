@@ -11,6 +11,7 @@ import {
   Navigation,
   PodDetail,
   Wait,
+  Playlist,
   SearchResults,
   StatePlayer,
   Subscriptions,
@@ -88,9 +89,10 @@ export default function App() {
 
   return (
     <>
-      <Box sx={{ mb: 20 }}>
+      <Box sx={{ pb: 20 }}>
         <Toolbar {...childProps} {...state.context} />
 
+ 
  
         <Navigation {...childProps} />
 
@@ -126,9 +128,15 @@ export default function App() {
           states={podcastMachine.states}
         />
       </Box>
-
+      <Playlist send={send} open={state.context.showList} {...state.context}/>
       <StatePlayer
         {...media}
+        handleList={() => {
+          send({
+            type: 'CHANGE',
+            showList: !state.context.showList
+          })
+        }}
         handleDiagnoticsClose={handleDiagnoticsClose}
         debug={state.context.settings === 'audio_player'}
       />

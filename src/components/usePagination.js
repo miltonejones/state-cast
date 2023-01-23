@@ -15,6 +15,7 @@ export const usePagination = (collection, {
   const visible = sorted?.slice(startNum, startNum + pageSize);
 
   return {
+    startNum,
     pageCount,
     visible
   }

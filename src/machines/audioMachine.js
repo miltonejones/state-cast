@@ -154,6 +154,10 @@ export const audioMachine = createMachine(
                 target: 'playing',
                 actions: 'playPlayer',
               },
+              OPEN: {
+                target: '#audio_player.replay',
+                actions: ['assignSourceToContext'],
+              },
             },
           },
         },

@@ -9,6 +9,7 @@ import {
   LinearProgress,
   Typography,
   Drawer,
+  Badge,
   styled,
 } from '@mui/material';
 import Marquee from 'react-fast-marquee';
@@ -151,13 +152,13 @@ export const useStatePlayer = () => {
   };
 };
 
-const Progress = ({ progress, handleSeek }) => {
+const Progress = ({ progress, handleSeek, src}) => {
   const open = Boolean(progress);
   if (!open)
     return (
       <>
         <LinearProgress />
-        <Typography>Loading audio...</Typography>
+        <Typography>Loading {src?.substr(0,50)}...</Typography>
       </>
     );
   return (
@@ -185,9 +186,11 @@ const StatePlayer = ({
   handleSeek,
   handlePlay,
   handleSkip,
+  handleList,
   handleEq,
 
   // context vars
+  src,
   title,
   owner,
   image,
@@ -206,6 +209,7 @@ const StatePlayer = ({
   // console.log({ progress });
   const red =
     'linear-gradient(0deg, rgba(2,160,5,1) 0%, rgba(226,163,15,1) 18px, rgba(255,0,42,1) 30px)';
+
 
   // if (idle) return <i />;
   return (
@@ -246,7 +250,9 @@ const StatePlayer = ({
           )}
 
           <Stack sx={{ width: 300 }}>
-            <Typography>{owner}[{retries}]</Typography>
+            <Badge badgeContent={retries} color="secondary">
+              <Typography>{owner}</Typography>
+            </Badge>
             <Text scrolling={scrolling}>
               <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
                 {title}
@@ -257,42 +263,25 @@ const StatePlayer = ({
           </Stack>
 
           <Stack direction="row" sx={{ alignItems: 'center' }}>
-            <IconButton
-              onClick={() => handleSkip(-30)}
-              sx={{ position: 'relative', width: 40, height: 40 }}
-            >
-              <i class="fa-solid fa-arrow-rotate-left"></i>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.6rem', position: 'absolute' }}
-              >
-                30
-              </Typography>
-            </IconButton>
+            {!!handleList && <IconButton onClick={handleList}><i class="fa-solid fa-list-check"></i>
+              </IconButton>}
+            <ThirtyButton direction="left"  onClick={() => handleSkip(-30)} /> 
             <IconButton size="large" onClick={() => handlePlay()}>
               {icon}
             </IconButton>
-            <IconButton
-              onClick={() => handleSkip(30)}
-              sx={{ position: 'relative', width: 40, height: 40 }}
-            >
-              <i class="fa-solid fa-arrow-rotate-right"></i>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.5rem', position: 'absolute' }}
-              >
-                30
-              </Typography>
-            </IconButton>
+            <ThirtyButton direction="right"  onClick={() => handleSkip(30)} /> 
           </Stack>
 
           <Typography variant="caption">{current_time_formatted}</Typography>
 
-          <Box sx={{ ml: 1, mr: 1, width: 'calc(100vw - 500px)' }}>
-            {/* {!progress && <LinearProgress />} */}
-            {/* {!progress && <>loading...</>} */}
-
-            <Progress progress={progress} handleSeek={handleSeek} />
+          <Box sx={{ ml: 1, mr: 1, width: 'calc(100vw - 500px)' }}> 
+            {/* {state.matches('opened.error.fatal') && <>fatal error</>} */}
+            {state.matches('opened.error.fatal') 
+              ?  <Typography onClick={() => send('RECOVER')}>Could not load audio. Please try again later.</Typography>
+              :  <Progress progress={progress} handleSeek={handleSeek} src={src} />
+              }
+           
+         
           </Box>
 
           <Typography variant="caption">{duration_formatted}</Typography>
@@ -339,43 +328,30 @@ const StatePlayer = ({
             <i class="fa-solid fa-xmark"></i>
           </IconButton>
         </Stack>
-
-        <Box>
-          {/* {JSON.stringify(state.value)} */}
-          <Card
-            sx={{ p: (t) => t.spacing(0.5, 1), maxWidth: 300, minWidth: 300 }}
-          >
-            {/* [  {JSON.stringify(coords)}] */}
-            {/* <canvas style={{
-          width: 300,
-          height: 40
-        }} 
-          ref={ref}
-        /> */}
-            {/* <Text scrolling={scrolling}>
-            <Typography variant="body2">{title}</Typography>
-          </Text> */}
-            {/* {JSON.stringify(scrolling)} */}
-          </Card>
-          {/* [{progress}] */}
-
-          {/* <Typography variant="body2">
-          {!eq && (
-            <>
-              EQ disabled.{' '}
-              <Button size="small" onClick={handleEq}>
-                Turn on
-              </Button>
-            </>
-          )}
-        </Typography> */}
-
-        </Box>
+ 
       </Bureau>
-          <Diagnostics id={id} state={state} states={states} onClose={handleDiagnoticsClose} open={debug} />
+
+      <Diagnostics id={id} state={state} states={states} onClose={handleDiagnoticsClose} open={debug} />
     </>
   );
 };
+
+const ThirtyButton = ({ direction, onClick }) => {
+  return (
+    <IconButton
+    onClick={onClick}
+    sx={{ position: 'relative', width: 40, height: 40 }}
+  >
+    <i className={`fa-solid fa-arrow-rotate-${direction}`}></i>
+    <Typography
+      variant="caption"
+      sx={{ fontSize: '0.5rem', fontWeight: 700, position: 'absolute' }}
+    >
+      30
+    </Typography>
+  </IconButton>
+  )
+}
 
 const Text = ({ scrolling, children }) => {
   if (scrolling) {

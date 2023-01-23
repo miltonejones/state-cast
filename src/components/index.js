@@ -6,7 +6,7 @@ import StatePlayer, { useStatePlayer } from './StatePlayer';
 import Navigation from './Navigation';
 import SearchResults from './SearchResults';
 import Toolbar from './Toolbar';
-import PodDetail from './PodDetail';
+import PodDetail, { PodDetailList } from './PodDetail';
 import PodGroup from './PodGroup';
 import CategoryList from './CategoryList';
 import StateCarousel from './StateCarousel';
@@ -14,6 +14,7 @@ import SettingsMenu from './SettingsMenu';
 import SettingsButton from './SettingsButton';
 import { usePagination } from './usePagination';
 import SubscribeButton from './SubscribeButton/SubscribeButton';
+import Playlist from './Playlist/Playlist';
 import About from './About';
 
 export {
@@ -23,7 +24,9 @@ export {
   Diagnostics,
   HomeScreen,
   Navigation,
+  Playlist,
   PodDetail,
+  PodDetailList,
   PodGroup,
   SearchResults,
   SettingsButton,

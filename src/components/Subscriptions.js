@@ -32,10 +32,10 @@ export const CastCard = ({ subscription, send, source }) => {
         image={subscription.artworkUrl100}
         alt={subscription.trackName}
       />
-      <CardContent>
+      <CardContent sx={{ p: t => t.spacing(1) + ' !important' }}>
         <Typography
           variant="body2"
-          sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+          sx={{ whiteSpace: 'nowrap', fontWeight: 600, textOverflow: 'ellipsis', overflow: 'hidden', width: '100%' }}
           color="text.secondary"
         >
           {subscription.trackName}
