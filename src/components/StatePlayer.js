@@ -368,9 +368,9 @@ const StatePlayer = ({
           )}
         </Typography> */}
 
-          <Diagnostics id={id} state={state} states={states} open={debug} />
         </Box>
       </Bureau>
+          <Diagnostics id={id} state={state} states={states} open={debug} />
     </>
   );
 };

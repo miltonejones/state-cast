@@ -141,7 +141,7 @@ const Diagnostics = ({ id, send, state, states, open, layer }) => {
         <Layout data-testid="test-for-Diagnostics">
           <Stack direction="row" sx={{ alignItems: 'center' }}>
             <Typography variant="body2">
-              Machine ID: <em>"{id}"</em> {JSON.stringify(open)}
+              Machine ID: <em>"{id}"</em>  
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             {!!event.on.SETTINGS && (
