@@ -207,152 +207,157 @@ const StatePlayer = ({
 
   // if (idle) return <i />;
   return (
-    <Bureau
-      elevation={4}
-      open={!idle}
-      ModalProps={{
-        slots: { backdrop: 'div' },
-        slotProps: {
-          root: {
-            //override the fixed position + the size of backdrop
-            style: {
-              position: 'absolute',
-              top: 'unset',
-              bottom: 'unset',
-              left: 'unset',
-              right: 'unset',
+    <>
+      {/* <Drawer anchor="top" open={!idle}>
+        <pre>{JSON.stringify(trackList, 0, 2)}</pre>
+      </Drawer> */}
+
+      <Bureau
+        elevation={4}
+        open={!idle}
+        ModalProps={{
+          slots: { backdrop: 'div' },
+          slotProps: {
+            root: {
+              //override the fixed position + the size of backdrop
+              style: {
+                position: 'absolute',
+                top: 'unset',
+                bottom: 'unset',
+                left: 'unset',
+                right: 'unset',
+              },
             },
           },
-        },
-      }}
-    >
-      {/* <pre>{JSON.stringify(rest, 0, 2)}</pre> */}
-      <Stack spacing={2} sx={{ p: 2, alignItems: 'center' }} direction="row">
-        {!!image && (
-          <img
-            style={{ borderRadius: 5 }}
-            src={image}
-            title={title}
-            width={60}
-            height={60}
-          />
-        )}
+        }}
+      >
+        {/* <pre>{JSON.stringify(rest, 0, 2)}</pre> */}
+        <Stack spacing={2} sx={{ p: 2, alignItems: 'center' }} direction="row">
+          {!!image && (
+            <img
+              style={{ borderRadius: 5 }}
+              src={image}
+              title={title}
+              width={60}
+              height={60}
+            />
+          )}
 
-        <Stack sx={{ width: 300 }}>
-          <Typography>{owner}</Typography>
-          <Text scrolling={scrolling}>
-            <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
-              {title}
-            </Typography>
-          </Text>
+          <Stack sx={{ width: 300 }}>
+            <Typography>{owner}</Typography>
+            <Text scrolling={scrolling}>
+              <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
+                {title}
+              </Typography>
+            </Text>
 
-          {/* <Typography variant="body1">{title}</Typography> */}
-        </Stack>
+            {/* <Typography variant="body1">{title}</Typography> */}
+          </Stack>
 
-        <Stack direction="row" sx={{ alignItems: 'center' }}>
-          <IconButton
-            onClick={() => handleSkip(-30)}
-            sx={{ position: 'relative', width: 40, height: 40 }}
-          >
-            <i class="fa-solid fa-arrow-rotate-left"></i>
-            <Typography
-              variant="caption"
-              sx={{ fontSize: '0.6rem', position: 'absolute' }}
+          <Stack direction="row" sx={{ alignItems: 'center' }}>
+            <IconButton
+              onClick={() => handleSkip(-30)}
+              sx={{ position: 'relative', width: 40, height: 40 }}
             >
-              30
-            </Typography>
-          </IconButton>
-          <IconButton size="large" onClick={() => handlePlay()}>
-            {icon}
-          </IconButton>
-          <IconButton
-            onClick={() => handleSkip(30)}
-            sx={{ position: 'relative', width: 40, height: 40 }}
-          >
-            <i class="fa-solid fa-arrow-rotate-right"></i>
-            <Typography
-              variant="caption"
-              sx={{ fontSize: '0.5rem', position: 'absolute' }}
-            >
-              30
-            </Typography>
-          </IconButton>
-        </Stack>
-
-        <Typography variant="caption">{current_time_formatted}</Typography>
-
-        <Box sx={{ ml: 1, mr: 1, width: 'calc(100vw - 500px)' }}>
-          {/* {!progress && <LinearProgress />} */}
-          {/* {!progress && <>loading...</>} */}
-
-          <Progress progress={progress} handleSeek={handleSeek} />
-        </Box>
-
-        <Typography variant="caption">{duration_formatted}</Typography>
-
-        {!!coords && eq && (
-          <Box>
-            <Card sx={{ width: 300, mb: 1 }}>
-              <Stack
-                sx={{
-                  alignItems: 'flex-end',
-                  height: 40,
-                  width: 300,
-                  border: 'solid 1px',
-                  borderColor: 'divider',
-                  position: 'relative',
-                }}
-                direction="row"
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.6rem', position: 'absolute' }}
               >
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                  }}
-                >
-                  <img src={bg()} alt="cover" />
-                </Box>
+                30
+              </Typography>
+            </IconButton>
+            <IconButton size="large" onClick={() => handlePlay()}>
+              {icon}
+            </IconButton>
+            <IconButton
+              onClick={() => handleSkip(30)}
+              sx={{ position: 'relative', width: 40, height: 40 }}
+            >
+              <i class="fa-solid fa-arrow-rotate-right"></i>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.5rem', position: 'absolute' }}
+              >
+                30
+              </Typography>
+            </IconButton>
+          </Stack>
 
-                {coords.map((f) => (
+          <Typography variant="caption">{current_time_formatted}</Typography>
+
+          <Box sx={{ ml: 1, mr: 1, width: 'calc(100vw - 500px)' }}>
+            {/* {!progress && <LinearProgress />} */}
+            {/* {!progress && <>loading...</>} */}
+
+            <Progress progress={progress} handleSeek={handleSeek} />
+          </Box>
+
+          <Typography variant="caption">{duration_formatted}</Typography>
+
+          {!!coords && eq && (
+            <Box>
+              <Card sx={{ width: 300, mb: 1 }}>
+                <Stack
+                  sx={{
+                    alignItems: 'flex-end',
+                    height: 40,
+                    width: 300,
+                    border: 'solid 1px',
+                    borderColor: 'divider',
+                    position: 'relative',
+                  }}
+                  direction="row"
+                >
                   <Box
                     sx={{
-                      background: red,
-                      ml: '1px',
-                      width: '9px',
-                      height: Math.abs(f.bar_height / 4),
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
                     }}
-                  ></Box>
-                ))}
-              </Stack>
-            </Card>
-          </Box>
-        )}
-        <IconButton onClick={handleClose}>
-          <i class="fa-solid fa-xmark"></i>
-        </IconButton>
-      </Stack>
+                  >
+                    <img src={bg()} alt="cover" />
+                  </Box>
 
-      <Box>
-        {/* {JSON.stringify(state.value)} */}
-        <Card
-          sx={{ p: (t) => t.spacing(0.5, 1), maxWidth: 300, minWidth: 300 }}
-        >
-          {/* [  {JSON.stringify(coords)}] */}
-          {/* <canvas style={{
+                  {coords.map((f) => (
+                    <Box
+                      sx={{
+                        background: red,
+                        ml: '1px',
+                        width: '9px',
+                        height: Math.abs(f.bar_height / 4),
+                      }}
+                    ></Box>
+                  ))}
+                </Stack>
+              </Card>
+            </Box>
+          )}
+          <IconButton onClick={handleClose}>
+            <i class="fa-solid fa-xmark"></i>
+          </IconButton>
+        </Stack>
+
+        <Box>
+          {/* {JSON.stringify(state.value)} */}
+          <Card
+            sx={{ p: (t) => t.spacing(0.5, 1), maxWidth: 300, minWidth: 300 }}
+          >
+            {/* [  {JSON.stringify(coords)}] */}
+            {/* <canvas style={{
           width: 300,
           height: 40
         }} 
           ref={ref}
         /> */}
-          {/* <Text scrolling={scrolling}>
+            {/* <Text scrolling={scrolling}>
             <Typography variant="body2">{title}</Typography>
           </Text> */}
-          {/* {JSON.stringify(scrolling)} */}
-        </Card>
-        {/* [{progress}] */}
+            {/* {JSON.stringify(scrolling)} */}
+          </Card>
+          {/* [{progress}] */}
 
-        {/* <Typography variant="body2">
+          {/* <Typography variant="body2">
           {!eq && (
             <>
               EQ disabled.{' '}
@@ -363,9 +368,10 @@ const StatePlayer = ({
           )}
         </Typography> */}
 
-        <Diagnostics id={id} state={state} states={states} open={debug} />
-      </Box>
-    </Bureau>
+          <Diagnostics id={id} state={state} states={states} open={debug} />
+        </Box>
+      </Bureau>
+    </>
   );
 };
 
