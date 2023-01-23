@@ -1,4 +1,5 @@
 import { createMachine, assign } from 'xstate';
+const COOKIE_NAME = 'pod-subs';
 
 export const podcastMachine = createMachine(
   {
@@ -283,7 +284,7 @@ export const podcastMachine = createMachine(
       }),
 
       initSubscription: assign((context, event) => {
-        const subs = localStorage.getItem('subs');
+        const subs = localStorage.getItem(COOKIE_NAME);
         try {
           const json = JSON.parse(subs);
           return {
@@ -304,7 +305,7 @@ export const podcastMachine = createMachine(
         const subs = node.find((f) => f.feedUrl === event.podcast.feedUrl)
           ? node.filter((f) => f.feedUrl !== event.podcast.feedUrl)
           : node.concat(event.podcast);
-        localStorage.setItem('subs', JSON.stringify(subs));
+        localStorage.setItem(COOKIE_NAME, JSON.stringify(subs));
         return {
           subscriptions: subs,
         };

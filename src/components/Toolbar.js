@@ -68,7 +68,7 @@ const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
           Categories
         </NavLink>
       </Box>
-      <Box sx={{ ml: 4 }}>
+      {!!subscriptions && <Box sx={{ ml: 4 }}>
         <Badge badgeContent={subscriptions.length} color="secondary">
           <NavLink
             active={view === 'subs'}
@@ -84,7 +84,7 @@ const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
             Subscriptions
           </NavLink>
         </Badge>
-      </Box>
+      </Box>}
       <Box sx={{ pl: 4 }}>
         <NavLink
           active={view === 'about'}
