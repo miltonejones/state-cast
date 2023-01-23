@@ -127,7 +127,7 @@ const Diagnostics = ({ id, send, state, states, open, layer }) => {
     typeof state.value === 'string' ? state.value : Object.keys(state.value)[0];
 
   const anchorOrigin = {
-    vertical: 'bottom',
+    vertical: 'top',
     horizontal: 'left',
   };
 

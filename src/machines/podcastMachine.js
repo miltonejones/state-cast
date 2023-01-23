@@ -52,6 +52,7 @@ export const podcastMachine = createMachine(
                 target: 'list',
                 actions: assign({
                   view: (context, event) => event.view,
+                  page: 1
                 }),
               },
 
@@ -98,6 +99,7 @@ export const podcastMachine = createMachine(
                 target: '#podcast_machine.navigate',
                 actions: assign({
                   view: (context, event) => event.view,
+                  page: 1
                 }),
               },
               CLOSE: {
@@ -170,6 +172,7 @@ export const podcastMachine = createMachine(
                 target: '#podcast_machine.navigate',
                 actions: assign({
                   view: (context, event) => event.view,
+                  page: 1
                 }),
               },
               // search support
@@ -317,6 +320,7 @@ export const podcastMachine = createMachine(
       assignView: assign((context, event) => {
         return {
           view: event.view,
+          page: 1
         };
       }),
       assignPodcast: assign((context, event) => {
