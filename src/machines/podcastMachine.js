@@ -104,6 +104,9 @@ export const podcastMachine = createMachine(
               },
               CLOSE: {
                 target: '#podcast_machine.navigate',
+                actions: assign({ 
+                  page: 1
+                }),
               },
               DETAIL: {
                 target: '#podcast_machine.detail',
@@ -154,6 +157,9 @@ export const podcastMachine = createMachine(
                 },
                 {
                   target: '#podcast_machine.navigate',
+                  actions: assign({ 
+                    page: 1
+                  }),
                 },
               ],
               // HOME: {
