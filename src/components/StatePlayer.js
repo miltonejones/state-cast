@@ -238,8 +238,8 @@ const StatePlayer = ({
               style={{ borderRadius: 5 }}
               src={image}
               title={title}
-              width={60}
-              height={60}
+              width={72}
+              height={72}
             />
           )}
 

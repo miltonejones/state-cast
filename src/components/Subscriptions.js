@@ -6,8 +6,10 @@ import {
   Typography,
   CardMedia,
   CardContent,
+  Pagination
 } from '@mui/material';
 import { Btn } from './styled';
+import { usePagination } from '.'
 
 export const CastCard = ({ subscription, send, source }) => {
   return (
@@ -20,7 +22,7 @@ export const CastCard = ({ subscription, send, source }) => {
           source,
         });
       }}
-      sx={{ width: '9vw', cursor: 'pointer' }}
+      sx={{ width: '11vw', cursor: 'pointer' }}
     >
       <CardMedia
         component="img"
@@ -49,8 +51,13 @@ export const SubscriptionList = ({
   source,
   limit,
   view,
+  page,
 }) => {
   const visible = !limit ? subscriptions : subscriptions.slice(0, limit);
+  
+  const pages = usePagination(visible, { page, pageSize: 15 })
+  
+
   return (
     <>
       <Stack
@@ -74,6 +81,24 @@ export const SubscriptionList = ({
             view all
           </Btn>
         )}
+
+        
+        {pages.pageCount > 1 && (
+          <Box>
+            <Pagination
+              count={pages.pageCount}
+              page={page}
+              onChange={(e, index) => {
+                send({
+                  type: 'PAGE',
+                  page: index,
+                });
+              }}
+            />
+          </Box>
+        )}
+
+
       </Stack>
 
       <Box
@@ -85,7 +110,7 @@ export const SubscriptionList = ({
           gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
         }}
       >
-        {visible.map((subscription, i) => (
+        {pages.visible.map((subscription, i) => (
           <CastCard
             key={i}
             subscription={subscription}

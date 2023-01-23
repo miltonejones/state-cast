@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { SubscriptionList, StateCarousel, CategoryList } from '.';
-import { shuffle } from '../util';
+import { shuffle } from '../util'; 
 
 const HomeScreen = (props) => {
   const { subscriptions, pods, send, settings } = props;
@@ -23,6 +23,7 @@ const HomeScreen = (props) => {
       <Typography sx={{ mt: 3 }} variant="h4">
         Listen Now
       </Typography>
+ 
 
       {!!images && (
         <StateCarousel

@@ -11,6 +11,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
+import { SubscribeButton, usePagination } from '.';
+
 // import { BackButton } from '../../../..';
 
 const Layout = styled(Box)(({ theme }) => ({
@@ -18,11 +20,13 @@ const Layout = styled(Box)(({ theme }) => ({
 }));
 
 const SearchResults = ({ results, subscriptions, param, page, send }) => {
-  const PAGE_SIZE = 10;
-  const pageCount = Math.ceil(results?.length / PAGE_SIZE);
-  const startNum = (page - 1) * PAGE_SIZE;
-  const sorted = results?.sort((a, b) => (a.trackName > b.trackName ? 1 : -1));
-  const visible = sorted?.slice(startNum, startNum + PAGE_SIZE);
+
+  const pages = usePagination(results, { page, pageSize: 10, sortkey: 'trackName'})
+  // const PAGE_SIZE = 10;
+  // const pageCount = Math.ceil(results?.length / PAGE_SIZE);
+  // const startNum = (page - 1) * PAGE_SIZE;
+  // const sorted = results?.sort((a, b) => (a.trackName > b.trackName ? 1 : -1));
+  // const visible = sorted?.slice(startNum, startNum + PAGE_SIZE);
 
   const subscribed = (podcast) =>
     subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
@@ -35,10 +39,10 @@ const SearchResults = ({ results, subscriptions, param, page, send }) => {
         Search results for "{param}" ({results?.length})
       </Typography>
 
-      {pageCount > 1 && (
+      {pages.pageCount > 1 && (
         <Box>
           <Pagination
-            count={pageCount}
+            count={pages.pageCount}
             page={page}
             onChange={(e, index) => {
               send({
@@ -51,8 +55,8 @@ const SearchResults = ({ results, subscriptions, param, page, send }) => {
       )}
 
       <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visible &&
-          visible.map((t) => (
+        {pages.visible &&
+         pages.visible.map((t) => (
             <ListItem
               sx={{ cursor: 'pointer' }}
               onClick={() => {
@@ -83,11 +87,12 @@ const SearchResults = ({ results, subscriptions, param, page, send }) => {
                   });
                 }}
               >
-                <i
+                <SubscribeButton subscribed={subscribed(t)}  />
+                {/* <i
                   className={`fa-${
                     subscribed(t) ? 'solid' : 'regular'
                   } fa-star`}
-                ></i>
+                ></i> */}
               </ListItemSecondaryAction>
             </ListItem>
           ))}

@@ -109,7 +109,7 @@ const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
             placeholder="Type a podcast name or category"
           />
           <Btn
-            endIcon={<i class="fa-solid fa-magnifying-glass"></i>}
+            startIcon={<i class="fa-solid fa-magnifying-glass"></i>}
             variant="contained"
             onClick={() => send('SEARCH')}
             sx={{ ml: 1 }}

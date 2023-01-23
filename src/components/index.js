@@ -12,6 +12,8 @@ import CategoryList from './CategoryList';
 import StateCarousel from './StateCarousel';
 import SettingsMenu from './SettingsMenu';
 import SettingsButton from './SettingsButton';
+import { usePagination } from './usePagination';
+import SubscribeButton from './SubscribeButton/SubscribeButton';
 import About from './About';
 
 export {
@@ -31,6 +33,8 @@ export {
   StateCarousel,
   SettingsMenu,
   Toolbar,
+  SubscribeButton,
   useStatePlayer,
+  usePagination,
   Wait,
 };

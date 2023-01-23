@@ -55,6 +55,9 @@ export const podcastMachine = createMachine(
                 }),
               },
 
+              PAGE: {
+                actions: 'assignPage', 
+              },
               SETTINGS: {
                 target: 'list',
                 actions: assign({

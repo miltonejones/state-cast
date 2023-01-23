@@ -15,6 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import { parseRss, getImageProps } from '../util';
+import { usePagination } from '.';
 
 const Layout = styled(Box)(({ theme }) => ({
   margin: theme.spacing(0),
@@ -44,10 +45,12 @@ const PodDetail = ({
     return <>No results</>;
   }
 
-  const PAGE_SIZE = 5;
-  const pageCount = Math.ceil(trackList.length / PAGE_SIZE);
-  const startNum = (page - 1) * PAGE_SIZE;
-  const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
+  const pages = usePagination(trackList, { page, pageSize: 10 })
+  
+  // const PAGE_SIZE = 5;
+  // const pageCount = Math.ceil(trackList.length / PAGE_SIZE);
+  // const startNum = (page - 1) * PAGE_SIZE;
+  // const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
 
   const subscribed = subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
   const imageProps = getImageProps(listMap);
@@ -104,10 +107,10 @@ const PodDetail = ({
       )}
 
       <Box sx={{ width: '50vw' }}>
-        {pageCount > 1 && (
+        {pages.pageCount > 1 && (
           <Box sx={{ ml: 10 }}>
             <Pagination
-              count={pageCount}
+              count={pages.pageCount}
               page={page}
               onChange={(e, index) => {
                 send({
@@ -119,7 +122,7 @@ const PodDetail = ({
           </Box>
         )}
         <List sx={{ ml: 2, maxWidth: '45vw' }}>
-          {visible.map((track) => (
+          {pages.visible.map((track) => (
             <ListItem
               sx={{
                 borderBottom: 1,

@@ -8,7 +8,7 @@ export const Outer = styled(Box)(() => ({
 }));
 
 export const Inner = styled(Box)(({ wide }) => ({
-  width: wide ? '100vw' : '50vw',
+  width: wide ? '100vw' : '60vw',
   overflow: 'hidden',
 }));
 
