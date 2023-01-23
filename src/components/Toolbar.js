@@ -18,7 +18,7 @@ const NavLink = styled(Typography)(({ active }) => ({
   cursor: 'pointer',
 }));
 
-const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
+const Toolbar = ({ send, settings, subscriptions, param, view, handleDiagnoticsClose, event }) => {
   const handleParamChange = (event) => {
     send({
       type: 'CHANGE',
@@ -119,6 +119,7 @@ const Toolbar = ({ send, settings, subscriptions, param, view, event }) => {
           {event.on.SETTINGS && (
             <>
               <SettingsMenu
+              handleDiagnoticsClose={handleDiagnoticsClose}
                 debug={settings === 'settings_menu'}
                 value={settings}
                 onChange={(value) =>

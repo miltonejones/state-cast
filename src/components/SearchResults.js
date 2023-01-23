@@ -35,7 +35,7 @@ const SearchResults = ({ results, subscriptions, param, page, send }) => {
     <Layout data-testid="test-for-SearchResults">
       {/* <BackButton send={send} /> */}
 
-      <Typography sx={{ pt: 2, pb: 3 }} variant="h5">
+      <Typography sx={{  pb: 3 }} variant="h5">
         Search results for "{param}" ({results?.length})
       </Typography>
 

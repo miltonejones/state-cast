@@ -4,7 +4,7 @@ import { useMachine } from '@xstate/react';
 import { Diagnostics } from '.';
 import { menuMachine } from '../machines';
 
-const SettingsMenu = ({ onChange, children, value, options, debug }) => {
+const SettingsMenu = ({ onChange, children, value, options, handleDiagnoticsClose, debug }) => {
   const [state, send] = useMachine(menuMachine, {
     services: {
       menuClicked: async (context, event) => {
@@ -42,7 +42,8 @@ const SettingsMenu = ({ onChange, children, value, options, debug }) => {
         ))}
       </Menu>
 
-      <Diagnostics
+      <Diagnostics 
+        onClose={handleDiagnoticsClose}
         open={debug}
         id={menuMachine.id}
         state={state}

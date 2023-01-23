@@ -55,19 +55,8 @@ export const audioMachine = createMachine(
       },
 
       opened: {
-        invoke: {
-          src: 'startAudio',
-          onDone: [
-            {
-              target: '.playing',
-            },
-          ],
-          onError: [
-            {
-              target: '.error',
-            },
-          ],
-        },
+        initial: 'reset',
+
         on: {
           CLOSE: {
             target: 'idle',
@@ -75,16 +64,61 @@ export const audioMachine = createMachine(
           },
         },
         states: {
-          error: {
+          reset: {
+            after: {
+              10: {
+                target: 'start', 
+                actions: assign({ 
+                  retries: 1
+                }),
+              }
+            }
+          },
+          start: {
             invoke: {
-              src: 'loadAudio',
+              src: 'startAudio',
               onDone: [
                 {
-                  target: '#audio_player.opened',
-                  actions: 'assignResultsToContext',
+                  target: 'playing',
+                },
+              ],
+              onError: [
+                {
+                  target: 'error',
+                  actions: assign({
+                    retries: (context, event) => context.retries + 1,  
+                  }),
                 },
               ],
             },
+          },
+          error: {
+           initial: 'retry',
+           states: {
+            retry: {
+              invoke: {
+                src: 'loadAudio',
+                onDone: [
+                  {
+                    target: '#audio_player.opened.start',
+                    actions: 'assignResultsToContext',
+                    cond: (context) => context.retries < 4,
+                  },
+                  {
+                    target: '#audio_player.opened.error.fatal'
+                  }
+                ],
+              },
+            },
+            fatal: {
+
+              "on": {
+                "RECOVER": {
+                  "target": "#audio_player.idle"
+                }
+              }
+            }
+           }
           },
           playing: {
             on: {
@@ -174,6 +208,7 @@ export const audioMachine = createMachine(
         return {
           eq: false,
           player: null,
+          retries: context.retries + 1
         };
       }),
       turnEqOn: assign((context, event) => {

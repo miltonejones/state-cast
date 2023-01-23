@@ -20,7 +20,7 @@ export const docs = {
   },
   'audio player': {
     machine: audioMachine,
-    url: 'https://stately.ai/registry/editor/6a837c17-5d8f-4733-9dbc-196b42d226d6?machineId=88e4ef17-50ce-491b-bcdd-f2be1543d831',
+    url: 'https://stately.ai/registry/editor/6a837c17-5d8f-4733-9dbc-196b42d226d6?machineId=79456d0e-ab3e-47e6-a490-28cdcf203f7b',
     description: 'Controls in-memory audio player.',
     states: {
       begin: 'Instantiates HTML5 audio player in memory.',

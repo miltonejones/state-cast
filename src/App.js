@@ -66,6 +66,13 @@ export default function App() {
     about: About,
   };
 
+  const handleDiagnoticsClose=() => {
+    send({
+      type: 'SETTINGS',
+      settings: false,
+    });
+  };
+
   const stateKey = Object.keys(forms).find(state.matches);
   const Form = forms[stateKey];
   const List = lists[state.context.view];
@@ -75,7 +82,9 @@ export default function App() {
     state,
     event,
     stateKey,
+    handleDiagnoticsClose
   };
+
 
   return (
     <>
@@ -91,7 +100,7 @@ export default function App() {
               <Form send={send} stateKey={stateKey} {...state.context} />
             )}
             {!!List && !Form && (
-              <List send={send} stateKey={stateKey} {...state.context} />
+              <List send={send} stateKey={stateKey} {...state.context} handleDiagnoticsClose={handleDiagnoticsClose}/>
             )}
           </Inner>
         </Outer>
@@ -109,6 +118,7 @@ export default function App() {
           </Typography>
         </Stack>
         <Diagnostics
+          onClose={handleDiagnoticsClose}
           open={state.context.settings === 'podcast_machine'}
           id={podcastMachine.id}
           state={state}
@@ -119,6 +129,7 @@ export default function App() {
 
       <StatePlayer
         {...media}
+        handleDiagnoticsClose={handleDiagnoticsClose}
         debug={state.context.settings === 'audio_player'}
       />
     </>

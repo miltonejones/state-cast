@@ -5,6 +5,7 @@ export const Outer = styled(Box)(() => ({
   width: '100vw',
   display: 'flex',
   justifyContent: 'center',
+  minHeight: '80vh'
 }));
 
 export const Inner = styled(Box)(({ wide }) => ({

@@ -12,7 +12,7 @@ import {
 import { getEvent } from '../util';
 
 const IceCream = styled(Box)(({ open }) => ({ 
-  position: 'absolute',
+  position: 'fixed',
   left: 20,
   top: !open ? -400 : 80,
   transition: 'top 0.4s linear',
@@ -123,7 +123,7 @@ const StateName = ({ state }) => {
   );
 };
 
-const Diagnostics = ({ id, send, state, states, open, layer }) => {
+const Diagnostics = ({ id, send, state, states, open, onClose, layer }) => {
   const { previous } = state.context;
   const event = getEvent(states, state);
 
@@ -144,14 +144,9 @@ const Diagnostics = ({ id, send, state, states, open, layer }) => {
               Machine ID: <em>"{id}"</em>  
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
-            {!!event.on.SETTINGS && (
+            {!!onClose && (
               <IconButton
-                onClick={() => {
-                  send({
-                    type: 'SETTINGS',
-                    settings: false,
-                  });
-                }}
+                onClick={onClose}
               >
                 {' '}
                 <i class="fa-solid fa-xmark"></i>

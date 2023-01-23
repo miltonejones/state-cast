@@ -4,7 +4,7 @@ import { SubscriptionList, StateCarousel, CategoryList } from '.';
 import { shuffle } from '../util'; 
 
 const HomeScreen = (props) => {
-  const { subscriptions, pods, send, settings } = props;
+  const { subscriptions, pods, send, settings, handleDiagnoticsClose } = props;
   const images = pods.map((podcast) => ({
     src: podcast.artworkUrl600,
     title: podcast.trackName,
@@ -27,6 +27,7 @@ const HomeScreen = (props) => {
 
       {!!images && (
         <StateCarousel
+          handleDiagnoticsClose={handleDiagnoticsClose}
           debug={settings === 'carousel'}
           images={shuffle(images)}
         />

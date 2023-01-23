@@ -172,6 +172,7 @@ const Progress = ({ progress, handleSeek }) => {
 };
 
 const StatePlayer = ({
+  handleDiagnoticsClose,
   icon,
   idle,
   state,
@@ -198,6 +199,7 @@ const StatePlayer = ({
   coords,
   trackList,
   eq,
+  retries,
   ...rest
 }) => {
   // const ref = useRef(null);
@@ -244,7 +246,7 @@ const StatePlayer = ({
           )}
 
           <Stack sx={{ width: 300 }}>
-            <Typography>{owner}</Typography>
+            <Typography>{owner}[{retries}]</Typography>
             <Text scrolling={scrolling}>
               <Typography sx={{ whiteSpace: 'nowrap ' }} variant="body2">
                 {title}
@@ -370,7 +372,7 @@ const StatePlayer = ({
 
         </Box>
       </Bureau>
-          <Diagnostics id={id} state={state} states={states} open={debug} />
+          <Diagnostics id={id} state={state} states={states} onClose={handleDiagnoticsClose} open={debug} />
     </>
   );
 };

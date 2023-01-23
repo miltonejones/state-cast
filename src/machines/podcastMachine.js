@@ -162,6 +162,12 @@ export const podcastMachine = createMachine(
                   }),
                 },
               ],
+              SETTINGS: { 
+                actions: assign({
+                  settings: (context, event) => event.settings,
+                }),
+              },
+
               // HOME: {
               //   target: '#podcast_machine.navigate',
               // },

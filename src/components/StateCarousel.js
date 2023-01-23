@@ -4,7 +4,7 @@ import { useMachine } from '@xstate/react';
 import { carouselMachine } from '../machines';
 import { Diagnostics } from '.';
 
-const StateCarousel = ({ images, debug }) => {
+const StateCarousel = ({ images, debug, handleDiagnoticsClose }) => {
   const [state, send] = useMachine(carouselMachine, {
     services: {
       loadImages: async () => images,
@@ -25,6 +25,7 @@ const StateCarousel = ({ images, debug }) => {
 
       <Diagnostics
         open={debug}
+        onClose={handleDiagnoticsClose}
         id={carouselMachine.id}
         state={state}
         send={send}
