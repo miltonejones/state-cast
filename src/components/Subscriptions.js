@@ -128,7 +128,7 @@ const Subscriptions = (props) => {
     return <>You have no subscriptions</>;
   }
 
-  return <SubscriptionList {...props} />;
+  return <SubscriptionList source="home" {...props} />;
 };
 Subscriptions.defaultProps = {};
 export default Subscriptions;
