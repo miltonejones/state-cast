@@ -116,6 +116,12 @@ export const podcastMachine = createMachine(
                 target: 'loaded',
                 actions: 'assignSubscription',
               },
+              FILTER: {
+                actions: assign({
+                  filterText: (context, event) => event.value,
+                  page: 1
+                }),
+              },
               PAGE: {
                 actions: 'assignPage',
                 target: 'loaded',
@@ -260,6 +266,7 @@ export const podcastMachine = createMachine(
         return {
           param: event.value || context.param,
           previous: event.type,
+          filterText: '',
           ...event
         };
       }),

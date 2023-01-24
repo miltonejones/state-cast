@@ -15,7 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import { parseRss, getImageProps } from '../util';
-import { usePagination } from '.';
+import { usePagination, TruncateModal } from '.';
 
 const Layout = styled(Box)(({ theme }) => ({
   margin: theme.spacing(0),
@@ -158,12 +158,15 @@ export const PodDetailList = ({
                 }
                 secondary={
                   <Stack>
-                    <Typography
+                    <TruncateModal limit={minimal ? 90 : 200}>
+                      {track['itunes:summary']}
+                    </TruncateModal>
+                    {/* <Typography
                       variant="body2"
                       dangerouslySetInnerHTML={{
                         __html: track['itunes:summary']?.substr(0, minimal ? 90 : 200),
                       }}
-                    ></Typography>
+                    ></Typography> */}
 
                     <Stack
                       direction="row"

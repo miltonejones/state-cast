@@ -13,6 +13,7 @@ import StateCarousel from './StateCarousel';
 import SettingsMenu from './SettingsMenu';
 import SettingsButton from './SettingsButton';
 import { usePagination } from './usePagination';
+import TruncateModal from './TruncateModal/TruncateModal';
 import SubscribeButton from './SubscribeButton/SubscribeButton';
 import Playlist from './Playlist/Playlist';
 import About from './About';
@@ -37,6 +38,7 @@ export {
   SettingsMenu,
   Toolbar,
   SubscribeButton,
+  TruncateModal,
   useStatePlayer,
   usePagination,
   Wait,

@@ -9,7 +9,7 @@ import {
   styled,
   Badge,
 } from '@mui/material';
-
+import {Helmet} from "react-helmet";
 import { SettingsMenu } from '.';
 import { Btn } from './styled';
 
@@ -18,11 +18,11 @@ const NavLink = styled(Typography)(({ active }) => ({
   cursor: 'pointer',
 }));
 
-const Toolbar = ({ send, settings, subscriptions, param, view, handleDiagnoticsClose, event }) => {
-  const handleParamChange = (event) => {
+const Toolbar = ({ send, settings, subscriptions, param, podcast, view, filterText, handleDiagnoticsClose, event }) => {
+  const handleParamChange = (e) => {
     send({
-      type: 'CHANGE',
-      value: event.target.value,
+      type: event.on.FILTER ? 'FILTER' : 'CHANGE',
+      value: e.target.value,
     });
   };
 
@@ -31,7 +31,36 @@ const Toolbar = ({ send, settings, subscriptions, param, view, handleDiagnoticsC
       type: 'LINK',
       view: where,
     });
+
+  const eventName = event.on.FILTER ? "FILTER" : "SEARCH"
+
+  const lists = {
+    home: 'Home',
+    subs: 'Subscriptions',
+    list: 'Categories',
+    about: 'About',
+  };
+
+  const title = !podcast ? lists[view] : `Detail | ${podcast.trackName}`;
+
+  const textProps = event.on.FILTER
+    ? {
+      value: filterText,
+      label: "Filter search  results",
+      placeholder: "Filter search results"
+    }
+    : {
+      value: param,
+      label: "Search Statecast",
+      placeholder: "Type a podcast name or category"
+    };
   return (
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Statecast | {title}</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
     <Stack
       direction="row"
       sx={{
@@ -94,27 +123,31 @@ const Toolbar = ({ send, settings, subscriptions, param, view, handleDiagnoticsC
         </NavLink>
       </Box>
       <Box sx={{ flexGrow: 1 }} />
-      <Collapse in={event.on.SEARCH} orientation="horizontal">
+      <Collapse in={event.on.SEARCH || event.on.FILTER}  orientation="horizontal">
         <Box sx={{ whiteSpace: 'nowrap' }}>
           <TextField
             sx={{ minWidth: 300 }}
-            value={param}
+            {...textProps}
             autoComplete="off"
             size="small"
+
             onKeyUp={(e) => {
-              if (e.keyCode === 13) return send('SEARCH');
+              if (e.keyCode === 13) return send(eventName);
             }}
             onChange={handleParamChange}
-            label="Search Statecast"
-            placeholder="Type a podcast name or category"
+
           />
           <Btn
-            startIcon={<i class="fa-solid fa-magnifying-glass"></i>}
+            startIcon={<i className={
+              event.on.FILTER 
+                ? "fa-solid fa-filter"
+                : "fa-solid fa-magnifying-glass"
+              }></i>}
             variant="contained"
-            onClick={() => send('SEARCH')}
+            onClick={() => send(eventName)}
             sx={{ ml: 1 }}
           >
-            search
+            {event.on.FILTER ? "filter" : "search"}
           </Btn>
           {event.on.SETTINGS && (
             <>
@@ -154,7 +187,7 @@ const Toolbar = ({ send, settings, subscriptions, param, view, handleDiagnoticsC
           )}
         </Box>
       </Collapse>
-    </Stack>
+    </Stack></>
   );
 };
 
