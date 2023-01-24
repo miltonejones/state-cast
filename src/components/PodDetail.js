@@ -241,9 +241,12 @@ const PodDetail = (props) => {
   // const visible = trackList.slice(startNum, startNum + PAGE_SIZE);
 
   const subscribed = subscriptions?.some((f) => f.feedUrl === podcast?.feedUrl);
-  const imageProps = getImageProps(listMap);
+  const photoProps = getImageProps(listMap);
   const descNode = listMap.find((f) => !!f.description);
-
+  const imageProps = {
+    ...photoProps,
+    title: photoProps.title || photoProps?.['itunes:name'] || podcast?.trackName
+  }
   
   return <PodDetailList {...props} trackList={trackList} imageProps={imageProps} descNode={descNode} />
 
