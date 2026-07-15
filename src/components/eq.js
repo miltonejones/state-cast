@@ -7,9 +7,9 @@ const frameLooper = (analyser, fn) => {
     window.webkitRequestAnimationFrame(repeater);
 
   const fbc_array = new Uint8Array(analyser.frequencyBinCount);
-  const bar_count = 32; 
+  const bar_count = 32;
 
-  analyser.getByteFrequencyData(fbc_array); 
+  analyser.getByteFrequencyData(fbc_array);
 
   const coords = [];
 
@@ -25,7 +25,7 @@ const frameLooper = (analyser, fn) => {
 
 class AudioConnector {
   connect(audio) {
-    audio.crossOrigin = 'anonymous';
+    audio.crossOrigin = "anonymous";
     this.context = new AudioContext();
     this.analyser = this.context.createAnalyser();
     this.source = this.context.createMediaElementSource(audio);

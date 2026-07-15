@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, Typography, Stack } from '@mui/material';
-import { CastCard } from '.';
+import React from "react";
+import { Box, Typography, Stack } from "@mui/material";
+import { CastCard } from ".";
 
-const Btn = ({ label, icon, onClick }) => {
+export const Btn = ({ label, icon, onClick }) => {
   return (
-    <Typography onClick={onClick} sx={{ cursor: 'pointer' }}>
+    <Typography onClick={onClick} sx={{ cursor: "pointer" }}>
       {label} {icon}
     </Typography>
   );
@@ -13,7 +13,7 @@ const Btn = ({ label, icon, onClick }) => {
 const PodGroup = ({ name, group, send }) => {
   const handleSearch = () => {
     send({
-      type: 'SEARCH',
+      type: "SEARCH",
       value: name,
     });
   };
@@ -21,7 +21,7 @@ const PodGroup = ({ name, group, send }) => {
     <>
       <Stack
         direction="row"
-        sx={{ mt: 2, alignItems: 'center', justifyContent: 'space-between' }}
+        sx={{ mt: 2, alignItems: "center", justifyContent: "space-between" }}
       >
         <Typography variant="h6">{name}</Typography>
 
@@ -34,11 +34,11 @@ const PodGroup = ({ name, group, send }) => {
 
       <Box
         sx={{
-          width: '50vw',
+          width: "50vw",
           pt: 2,
           gap: 2,
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
         }}
       >
         {group.slice(0, 5).map((item) => (
